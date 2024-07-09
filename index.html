@@ -4,7 +4,8 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Jean Young's Portfolio</title>
-        <link rel="stylesheet" href="styles.css" />
+        <link rel="stylesheet" href="./styles/common.css" />
+        <link rel="stylesheet" href="./styles/styles.css" />
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
@@ -17,29 +18,30 @@
             <span><i class="fa-solid fa-bars"></i></span>
         </div>
         <div id="menu-popup">
+            <div id="close"><i class="fa-solid fa-xmark"></i></div>
             <ul>
-                <li>
+                <li style="--i: 4">
                     <a href="#"
                         ><span><i class="fa-solid fa-house"></i></span> Home</a
                     >
                 </li>
-                <li>
+                <li style="--i: 3">
                     <a href="#"
                         ><span><i class="fa-solid fa-circle-info"></i></span> About</a
                     >
                 </li>
-                <li>
+                <li style="--i: 2">
                     <a href="#"
                         ><span><i class="fa-solid fa-list-ul"></i></span> Portfolio</a
                     >
                 </li>
-                <li>
+                <li style="--i: 1">
                     <a href="#"
                         ><span><i class="fa-solid fa-envelope"></i></span> Contact</a
                     >
                 </li>
             </ul>
         </div>
-        <script type="text/javascript" src="main.js"></script>
+        <script type="text/javascript" src="./js/main.js"></script>
     </body>
 </html>
