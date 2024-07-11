@@ -8,10 +8,16 @@
 }
 
 :root {
-    --main-bg-color: #434750;
-    --sub-bg-color: #3e3f46;
+    --main-bg-color: #222831;
+    --sub-bg-color: #393e46;
+    --point-color: #ffd369;
+    --text-color-bright: #eee;
+    --text-color-dark: #222831;
 }
 
+body {
+    background-color: var(--main-bg-color);
+}
 /*
     공통 메뉴
 */
@@ -23,6 +29,7 @@
     cursor: pointer;
     transition: 0.5s;
     z-index: 999;
+    color: var(--text-color-bright);
 }
 
 #menu:hover {
@@ -41,7 +48,7 @@
     justify-content: center;
     align-items: center;
     background: var(--main-bg-color);
-    transform-origin: top right;
+    transform-origin: center center;
     transform: scale(0);
     transition: 0.3s;
     z-index: 999;
@@ -59,10 +66,13 @@
 #menu-popup ul li {
     position: relative;
     z-index: var(--i);
-    padding: 20px;
     background: var(--sub-bg-color);
     width: 200px;
     transition: 0.5s;
+}
+
+#menu-popup ul li:last-child::after {
+    box-shadow: -150px 150px 30px var(--main-bg-color);
 }
 
 #menu-popup ul li::before {
@@ -95,18 +105,19 @@
 
 #menu-popup ul li:hover {
     transform: translate(20px, 20px);
-    background: #e63e;
+    background: var(--point-color);
 }
 
 #menu-popup ul li:hover::after,
 #menu-popup ul li:hover::before {
-    background: #e63e;
+    background: var(--point-color);
 }
 
 #menu-popup ul li a {
     display: block;
+    padding: 20px;
     text-decoration: none;
-    color: #fff;
+    color: var(--text-color-bright);
 }
 
 #menu-popup ul li a span {
@@ -125,6 +136,10 @@
     transition: 0.5s;
 }
 
+#menu-popup ul li:hover a {
+    color: var(--text-color-dark);
+}
+
 #menu-popup ul li:hover a span {
     opacity: 1;
 }
@@ -139,7 +154,7 @@
     font-size: 1.5em;
     cursor: pointer;
     transition: 0.3s;
-    color: #fff;
+    color: var(--text-color-bright);
 }
 
 #close:hover {
