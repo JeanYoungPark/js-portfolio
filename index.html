@@ -12,8 +12,16 @@
             integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
             crossorigin="anonymous"
             referrerpolicy="no-referrer" />
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js",
+                    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.166.1/examples/jsm/"
+                }
+            }
+        </script>
     </head>
-    <body>>
+    <body>
         </div>
         <div id="menu">
             <span><i class="fa-solid fa-bars"></i></span>
@@ -45,6 +53,7 @@
         </div>
         <div id="main"></div>
         <script type="text/javascript" src="./js/common.js"></script>
-        <script type="text/javascript" src="./js/main.js"></script>
+        <script type="module" src="./js/main.js"></script>
+        
     </body>
 </html>
