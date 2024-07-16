@@ -1,0 +1,110 @@
+.typing {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  width: 300px;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  transform: translate(-50%, 0);
+}
+.typing .text {
+  position: relative;
+  font-size: 2em;
+  font-weight: 600;
+}
+.typing .text.first {
+  padding-right: 10px;
+  color: #eee;
+}
+.typing .text.sec {
+  color: #ffd369;
+  text-shadow: 0 0 5px #ffd369;
+}
+.typing .text.sec::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #222831;
+  border-left: 2px solid #ffd369;
+  animation: animateTyping 4s steps(12) infinite;
+}
+
+@keyframes animateTyping {
+  40%, 60% {
+    left: calc(100% + 4px);
+  }
+  100% {
+    left: 0;
+  }
+}
+.about {
+  position: relative;
+  padding-top: 100vh;
+  height: 300vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.about .test {
+  position: absolute;
+  top: 100vh;
+  left: 0;
+  width: 100%;
+  height: 300vh;
+  background: #222831;
+  z-index: 0;
+}
+.about .description {
+  position: absolute;
+  top: 150vh;
+  z-index: 1;
+  padding: 0 20vw;
+  color: #eee;
+}
+.about .description.active {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.about .description span.active {
+  color: #ffd369;
+}
+
+#scroll {
+  position: fixed;
+  z-index: 0;
+  bottom: 30px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  font-size: 1.5em;
+  color: #eee;
+  text-shadow: 0 0 5px #eee;
+  animation: bounce 2s infinite;
+  transition: 0.5s;
+  opacity: 1;
+}
+#scroll.none {
+  opacity: 0;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-30px);
+  }
+  60% {
+    transform: translateY(-15px);
+  }
+}
