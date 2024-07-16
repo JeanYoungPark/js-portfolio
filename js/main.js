@@ -36,13 +36,13 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 // }
 
 const scene = new THREE.Scene();
-scene.backgroundColor = new THREE.Color("white");
+scene.background = new THREE.Color(0xffffff);
 
 let light = new THREE.DirectionalLight(0xffff00, 10);
 scene.add(light);
 
-const camera = new THREE.PerspectiveCamera(500, window.innerWidth / window.innerHeight);
-camera.position.set(50, 400, 900);
+const camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight);
+camera.position.set(50, 300, 900);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -53,10 +53,10 @@ const loader = new GLTFLoader();
 loader.load("/scene.gltf", function (gltf) {
     scene.add(gltf.scene);
 
-    function animate(animate) {
+    function animate() {
         requestAnimationFrame(animate);
         // 모든 프레임마다 실행
-        gltf.rotation.y += 0.01;
+        gltf.scene.rotation.y += 0.001;
         renderer.render(scene, camera);
     }
 
