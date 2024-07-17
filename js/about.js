@@ -1,3 +1,5 @@
+// typing
+
 const infiniteTyping = () => {
     const text = document.querySelector(".sec");
 
@@ -17,9 +19,8 @@ const infiniteTyping = () => {
 infiniteTyping();
 setInterval(infiniteTyping, 12000);
 
-/**
- *
- */
+// scroll reading
+
 const typingWrapper = document.querySelector(".typing");
 const aboutWrapper = document.querySelector(".about");
 const description = document.querySelector(".description");
@@ -28,10 +29,18 @@ const descriptionText = document.querySelector(".description p");
 const descriptionTextContent = descriptionText.textContent;
 descriptionText.innerHTML = "";
 
-for (let s of descriptionTextContent) {
-    let span = document.createElement("span");
-    span.textContent = s;
-    descriptionText.appendChild(span);
+for (let index = 0; index < descriptionTextContent.length - 4; index++) {
+    let letter;
+
+    if (descriptionTextContent.slice(index, index + 4) === "\\r\\n") {
+        letter = document.createElement("br");
+        index += 3;
+    } else {
+        letter = document.createElement("span");
+        letter.textContent = descriptionTextContent[index];
+    }
+
+    descriptionText.appendChild(letter);
 }
 
 const spans = descriptionText.querySelectorAll("span");
@@ -53,9 +62,8 @@ window.addEventListener("scroll", () => {
     }
 });
 
-/**
- * scroll
- */
+//scroll icon
+
 const scrollIcon = document.querySelector("#scroll");
 window.addEventListener("scroll", () => {
     if (window.scrollY > window.innerHeight / 4) {
