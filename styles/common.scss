@@ -8,8 +8,14 @@
     font-family: "Poppins", sans-serif;
 }
 
+ul {
+    list-style: none;
+}
 body {
     background-color: variables.$main-bg-color;
+}
+body.lock {
+    overflow: hidden;
 }
 
 /*

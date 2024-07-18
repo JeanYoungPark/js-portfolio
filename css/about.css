@@ -1,4 +1,8 @@
-.typing {
+.typing-container {
+  width: 100%;
+  height: 100vh;
+}
+.typing-container .typing {
   position: fixed;
   top: 0;
   left: 50%;
@@ -9,20 +13,20 @@
   overflow: hidden;
   transform: translate(-50%, 0);
 }
-.typing .text {
+.typing-container .typing .text {
   position: relative;
   font-size: 2em;
   font-weight: 600;
 }
-.typing .text.first {
+.typing-container .typing .text.first {
   padding-right: 10px;
   color: #eee;
 }
-.typing .text.sec {
+.typing-container .typing .text.sec {
   color: #ffd369;
   text-shadow: 0 0 5px #ffd369;
 }
-.typing .text.sec::after {
+.typing-container .typing .text.sec::after {
   content: "";
   position: absolute;
   top: 0;
@@ -42,7 +46,7 @@
     left: 0;
   }
 }
-.about {
+.about-container {
   position: relative;
   padding-top: 100vh;
   height: 300vh;
@@ -50,23 +54,28 @@
   justify-content: center;
   align-items: center;
 }
-.about .test {
+.about-container .cover-bg {
   position: absolute;
-  top: 100vh;
+  top: 0;
   left: 0;
   width: 100%;
   height: 300vh;
   background: #222831;
   z-index: 0;
 }
-.about .description {
+.about-container .description {
   position: absolute;
-  top: 150vh;
+  top: 50vh;
   z-index: 1;
   padding: 0 20vw;
   color: #eee;
 }
-.about .description.active {
+.about-container .description h2 {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 30px;
+}
+.about-container .description.active {
   position: fixed;
   top: 0;
   left: 0;
@@ -76,8 +85,89 @@
   align-items: center;
   justify-content: center;
 }
-.about .description span.active {
+.about-container .description span.active {
   color: #ffd369;
+}
+
+.skill-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.skill-container .cover-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: #222831;
+  z-index: 2;
+}
+.skill-container .skills {
+  position: relative;
+  width: 80%;
+  z-index: 3;
+  color: #eee;
+}
+.skill-container .skills h2 {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 50px;
+}
+.skill-container .skills .skill-list:hover ul .glass {
+  transform: rotate(0deg);
+  margin: 0 20px;
+}
+.skill-container .skills .skill-list ul {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-bottom: 50px;
+}
+.skill-container .skills .skill-list ul .glass {
+  position: relative;
+  width: calc(16.666% - 40px);
+  height: 200px;
+  background: linear-gradient(rgba(255, 255, 255, 0.1333333333), transparent);
+  border: 1px solid rgba(238, 238, 238, 0.1);
+  box-shadow: 0 25px 25px rgba(0, 0, 0, 0.25);
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  margin: 0 -45px;
+  transform: rotate(calc(var(--i) * 1deg));
+  transition: 0.5s;
+}
+.skill-container .skills .skill-list ul .glass::before {
+  content: attr(data-text);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 40px;
+  background: rgba(238, 238, 238, 0.05);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #eee;
+}
+.skill-container .skills .skill-list ul .glass div {
+  width: 60px;
+  height: 60px;
+}
+.skill-container .skills .skill-list ul .glass div img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 
 #scroll {

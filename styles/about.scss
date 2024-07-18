@@ -1,40 +1,45 @@
 @use "./_variables";
 
-.typing {
-    position: fixed;
-    top: 0;
-    left: 50%;
-    width: 300px;
+.typing-container {
+    width: 100%;
     height: 100vh;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    transform: translate(-50%, 0);
 
-    .text {
-        position: relative;
-        font-size: 2em;
-        font-weight: 600;
+    .typing {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        width: 300px;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        transform: translate(-50%, 0);
 
-        &.first {
-            padding-right: 10px;
-            color: variables.$text-color-bright;
-        }
+        .text {
+            position: relative;
+            font-size: 2em;
+            font-weight: 600;
 
-        &.sec {
-            color: variables.$point-color;
-            text-shadow: 0 0 5px variables.$point-color;
+            &.first {
+                padding-right: 10px;
+                color: variables.$text-color-bright;
+            }
 
-            &::after {
-                content: "";
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: variables.$main-bg-color;
-                border-left: 2px solid variables.$point-color;
-                animation: animateTyping 4s steps(12) infinite;
+            &.sec {
+                color: variables.$point-color;
+                text-shadow: 0 0 5px variables.$point-color;
+
+                &::after {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: variables.$main-bg-color;
+                    border-left: 2px solid variables.$point-color;
+                    animation: animateTyping 4s steps(12) infinite;
+                }
             }
         }
     }
@@ -50,7 +55,7 @@
     }
 }
 
-.about {
+.about-container {
     position: relative;
     padding-top: 100vh;
     height: 300vh;
@@ -58,9 +63,9 @@
     justify-content: center;
     align-items: center;
 
-    .test {
+    .cover-bg {
         position: absolute;
-        top: 100vh;
+        top: 0;
         left: 0;
         width: 100%;
         height: 300vh;
@@ -70,10 +75,16 @@
 
     .description {
         position: absolute;
-        top: 150vh;
+        top: 50vh;
         z-index: 1;
         padding: 0 20vw;
         color: variables.$text-color-bright;
+
+        h2 {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
         &.active {
             position: fixed;
@@ -92,9 +103,94 @@
     }
 }
 
-.skills {
+.skill-container {
+    position: relative;
     width: 100%;
     height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .cover-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: variables.$main-bg-color;
+        z-index: 2;
+    }
+
+    .skills {
+        position: relative;
+        width: 80%;
+        z-index: 3;
+        color: variables.$text-color-bright;
+
+        h2 {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .skill-list {
+            &:hover ul .glass {
+                transform: rotate(0deg);
+                margin: 0 20px;
+            }
+
+            ul {
+                position: relative;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-wrap: wrap;
+                width: 100%;
+                margin-bottom: 50px;
+
+                .glass {
+                    position: relative;
+                    width: calc(16.666% - 40px);
+                    height: 200px;
+                    background: linear-gradient(#fff2, transparent);
+                    border: 1px solid rgba(variables.$text-color-bright, 0.1);
+                    box-shadow: 0 25px 25px rgba(0, 0, 0, 0.25);
+                    backdrop-filter: blur(10px);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 10px;
+                    margin: 0 -45px;
+                    transform: rotate(calc(var(--i) * 1deg));
+                    transition: 0.5s;
+
+                    &::before {
+                        content: attr(data-text);
+                        position: absolute;
+                        bottom: 0;
+                        width: 100%;
+                        height: 40px;
+                        background: rgba(variables.$text-color-bright, 0.05);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        color: variables.$text-color-bright;
+                    }
+
+                    div {
+                        width: 60px;
+                        height: 60px;
+
+                        img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: contain;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 #scroll {

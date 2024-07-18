@@ -21,8 +21,8 @@ setInterval(infiniteTyping, 12000);
 
 // scroll reading
 
-const typingWrapper = document.querySelector(".typing");
-const aboutWrapper = document.querySelector(".about");
+const typingWrapper = document.querySelector(".typing-container");
+const aboutWrapper = document.querySelector(".about-container");
 const description = document.querySelector(".description");
 
 const descriptionText = document.querySelector(".description p");
@@ -47,7 +47,7 @@ const spans = descriptionText.querySelectorAll("span");
 const aboutScrollHeight = (aboutWrapper.offsetHeight - window.innerHeight) / descriptionTextContent.length;
 
 window.addEventListener("scroll", () => {
-    if (window.scrollY >= typingWrapper.offsetHeight) {
+    if (window.scrollY >= typingWrapper.offsetHeight && window.scrollY) {
         description.classList.add("active");
 
         spans.forEach((span, index) => {

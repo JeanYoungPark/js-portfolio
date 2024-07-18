@@ -7,8 +7,16 @@
   font-family: "Poppins", sans-serif;
 }
 
+ul {
+  list-style: none;
+}
+
 body {
   background-color: #222831;
+}
+
+body.lock {
+  overflow: hidden;
 }
 
 /*
