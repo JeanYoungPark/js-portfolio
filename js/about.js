@@ -72,3 +72,14 @@ window.addEventListener("scroll", () => {
         scrollIcon.classList.remove("none");
     }
 });
+
+// skills icon
+const skillsWrapper = document.querySelector(".skill-container");
+
+window.addEventListener("scroll", () => {
+    if (document.body.offsetHeight - window.scrollY - window.innerHeight === 0) {
+        skillsWrapper.querySelector(".skill-list").classList.add("active");
+    } else {
+        skillsWrapper.querySelector(".skill-list").classList.remove("active");
+    }
+});

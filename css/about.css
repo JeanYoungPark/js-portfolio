@@ -70,11 +70,6 @@
   padding: 0 20vw;
   color: #eee;
 }
-.about-container .description h2 {
-  width: 100%;
-  text-align: center;
-  margin-bottom: 30px;
-}
 .about-container .description.active {
   position: fixed;
   top: 0;
@@ -84,6 +79,32 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.about-container .description h2 {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.about-container .description .urls {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+.about-container .description .urls li {
+  margin: 0 5px;
+}
+.about-container .description .urls li a {
+  display: block;
+  width: 40px;
+  height: 40px;
+}
+.about-container .description .urls li a img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 .about-container .description span.active {
   color: #ffd369;
@@ -117,7 +138,7 @@
   text-align: center;
   margin-bottom: 50px;
 }
-.skill-container .skills .skill-list:hover ul .glass {
+.skill-container .skills .skill-list.active ul .glass {
   transform: rotate(0deg);
   margin: 0 20px;
 }
