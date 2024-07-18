@@ -47,7 +47,7 @@ const spans = descriptionText.querySelectorAll("span");
 const aboutScrollHeight = (aboutWrapper.offsetHeight - window.innerHeight) / descriptionTextContent.length;
 
 window.addEventListener("scroll", () => {
-    if (window.scrollY >= typingWrapper.offsetHeight && window.scrollY) {
+    if (window.scrollY >= typingWrapper.offsetHeight) {
         description.classList.add("active");
 
         spans.forEach((span, index) => {
@@ -73,7 +73,7 @@ window.addEventListener("scroll", () => {
     }
 });
 
-// skills icon
+// skills card
 const skillsWrapper = document.querySelector(".skill-container");
 
 window.addEventListener("scroll", () => {

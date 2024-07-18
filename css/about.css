@@ -66,6 +66,7 @@
 .about-container .description {
   position: absolute;
   top: 50vh;
+  transform: translateY(-50%);
   z-index: 1;
   padding: 0 20vw;
   color: #eee;
@@ -79,6 +80,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transform: none;
 }
 .about-container .description h2 {
   width: 100%;
@@ -179,6 +181,9 @@
   justify-content: center;
   align-items: center;
   color: #eee;
+}
+.skill-container .skills .skill-list ul .glass:hover {
+  transform: scale(1.1);
 }
 .skill-container .skills .skill-list ul .glass div {
   width: 60px;

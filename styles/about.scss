@@ -76,6 +76,7 @@
     .description {
         position: absolute;
         top: 50vh;
+        transform: translateY(-50%);
         z-index: 1;
         padding: 0 20vw;
         color: variables.$text-color-bright;
@@ -89,6 +90,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transform: none;
         }
 
         h2 {
@@ -199,6 +201,10 @@
                         justify-content: center;
                         align-items: center;
                         color: variables.$text-color-bright;
+                    }
+
+                    &:hover {
+                        transform: scale(1.1);
                     }
 
                     div {
