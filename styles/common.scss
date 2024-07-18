@@ -1,0 +1,165 @@
+@use "./_variables";
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+ul {
+    list-style: none;
+}
+body {
+    background-color: variables.$main-bg-color;
+}
+body.lock {
+    overflow: hidden;
+}
+
+/*
+    공통 메뉴
+*/
+#menu {
+    position: fixed;
+    right: 30px;
+    top: 20px;
+    font-size: 1.5em;
+    cursor: pointer;
+    transition: 0.5s;
+    z-index: 999;
+    color: variables.$text-color-bright;
+
+    &:hover {
+        transform-origin: center;
+        transform: rotate(180deg);
+    }
+}
+
+/*
+    공통 메뉴 핍업
+*/
+#menu-popup {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: variables.$main-bg-color;
+    transform-origin: center center;
+    transform: scale(0);
+    transition: 0.3s;
+    z-index: 999;
+
+    &.active {
+        transform: scale(1);
+    }
+
+    ul {
+        list-style: none;
+        transform: skewY(-15deg);
+
+        li {
+            position: relative;
+            z-index: var(--i);
+            background: variables.$sub-bg-color;
+            width: 200px;
+            transition: 0.5s;
+
+            &::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: -40px;
+                height: 100%;
+                width: 40px;
+                background: variables.$sub-bg-color;
+                filter: brightness(0.7);
+                transform-origin: right;
+                transform: skewY(45deg);
+                transition: 0.5s;
+            }
+
+            &::after {
+                content: "";
+                width: 100%;
+                height: 40px;
+                position: absolute;
+                top: -40px;
+                left: 0;
+                background: variables.$sub-bg-color;
+                filter: brightness(0.8);
+                transform-origin: bottom;
+                transform: skewX(45deg);
+                transition: 0.5s;
+            }
+
+            &:last-child::after {
+                box-shadow: -150px 150px 30px variables.$main-bg-color;
+            }
+
+            &:hover {
+                transform: translate(20px, 20px);
+                background: variables.$point-color;
+
+                &::after,
+                &::before {
+                    background: variables.$point-color;
+                }
+
+                a {
+                    color: variables.$text-color-dark;
+
+                    span {
+                        opacity: 1;
+                    }
+                }
+            }
+
+            a {
+                display: block;
+                padding: 20px;
+                text-decoration: none;
+                color: variables.$text-color-bright;
+
+                span {
+                    position: absolute;
+                    top: 0;
+                    left: -40px;
+                    width: 40px;
+                    height: 100%;
+                    text-align: center;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    transform-origin: right;
+                    transform: skewY(45deg);
+                    opacity: 0.5;
+                    transition: 0.5s;
+                }
+            }
+        }
+    }
+}
+
+/*
+    공통 닫기 버튼
+*/
+#close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 1.5em;
+    cursor: pointer;
+    transition: 0.3s;
+    color: variables.$text-color-bright;
+
+    &:hover {
+        transform-origin: center;
+        transform: rotate(180deg);
+    }
+}
