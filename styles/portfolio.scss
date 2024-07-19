@@ -1,0 +1,34 @@
+@use "./_variables";
+
+.portfolio-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(
+        to bottom,
+        variables.$sub-bg-color 50%,
+        variables.$main-bg-color 50%
+    );
+
+    .portfolio {
+        position: absolute;
+        width: 100%;
+        height: 100vh;
+        top: 0;
+        left: 0;
+
+        .card {
+            position: absolute;
+            width: 200px;
+            height: 300px;
+            background: variables.$text-color-bright;
+            transition: 0.5s;
+
+            @for $i from -4 through 3 {
+                &:nth-child(#{$i}) {
+                    transform: rotate(($i * 45) deg);
+                }
+            }
+        }
+    }
+}
