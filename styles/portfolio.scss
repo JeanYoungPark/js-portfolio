@@ -1,257 +1,112 @@
-$b: #32cbfb;
-$w: #fff;
-$g: #e4e2e5;
-$r: #fc3359;
-$y: #fefb3a;
-$bl: #222;
-$t: rgba(255, 255, 255, 0.00001);
+@use "./_variables";
+
+.portfolio-container {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(to bottom, variables.$sub-bg-color 50%, variables.$main-bg-color 50%);
+
+    .portfolio {
+        position: relative;
+        width: 1500px;
+        height: 1500px;
+
+        .cards {
+            position: absolute;
+            top: -100px;
+            left: -700px;
+            width: 100%;
+            height: 100%;
+            transform: rotate(0);
+            transition: 0.7s cubic-bezier(1, 0, 0, 1);
+
+            .card {
+                position: absolute;
+                left: 1250px;
+                top: calc(50% - 200px);
+                width: 350px;
+                height: 400px;
+                transform-origin: -480px;
+                transform-style: preserve-3d;
+                perspective: 800px;
+                transition: 0.7s cubic-bezier(1, 0, 0, 1);
+                z-index: 10;
+                cursor: pointer;
+
+                .inner {
+                    position: relative;
+                    width: 100%;
+                    height: 100%;
+                    background: variables.$text-color-bright;
+                    transition: 0.7s cubic-bezier(1, 0, 0, 1);
+
+                    .text {
+                        position: absolute;
+                        width: 70%;
+                        height: 60%;
+                        transition: 0.2s cubic-bezier(1, 0, 0, 1);
+                        transform: translateX(150%) rotateY(90deg);
+                        transform-origin: bottom;
+                        padding: 25px;
+                    }
+                }
+
+                @for $i from 1 through 8 {
+                    &:nth-of-type(#{$i}) {
+                        transform: rotate(#{($i - 1) * 45}deg);
+
+                        .inner {
+                            transform: rotate(#{(($i - 1) + 8) * -45}deg) rotateX(-30deg) translateZ(-100px);
+                        }
+
+                        &.active {
+                            .inner {
+                                transform: rotate(-360deg) rotateX(-30deg) translateZ(-100px);
+                            }
+                        }
+
+                        &.clicked {
+                            z-index: 11;
+
+                            .inner {
+                                width: 600px;
+                                height: 550px;
+                                transform: rotate(#{($i - 1) * 45}deg) rotateX(0deg) translateZ(100px) translateY(-100px) translateX(-200px);
+                                box-shadow: 0 20px 20px 0 rgba(0, 0, 0, 0.25);
+
+                                // .text {
+                                //     transition: opacity 0 ease-in-out transform 0.3s cubic-bezier(0, 1, 0, 1), box-shadow 0.2s ease-in-out;
+                                //     transition-delay: 0.3s, 0.6s, 0;
+                                //     transform: translateX(150%) rotateX(0deg);
+                                // }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 #wrap {
-    width: 800px;
-    height: 500px;
+    width: 100%;
+    height: 100vh;
     box-shadow: 0 20px 30px -5px rgba(0, 0, 0, 0.15);
     overflow: hidden;
     position: relative;
     transform-style: preserve-3d;
-    background: linear-gradient(to bottom, $w 50%, $g 50%);
-    // .trigger {
-    //     position: absolute;
-    //     width: 5%;
-    //     height: 100%;
-    //     bottom: 0;
-    //     right: 0;
-    //     z-index: 99;
-    //     opacity: 1;
-    //     cursor: pointer;
-    //     &:before {
-    //         content: "";
-    //         position: absolute;
-    //         width: 100%;
-    //         height: 100%;
-    //         top: 0;
-    //         left: 0;
-    //         background: $w;
-    //         box-shadow: -1px 0 0 0 rgba(0, 0, 0, 0.015);
-    //         transition: 0.2s ease-in-out;
-    //     }
-    //     &:after {
-    //         content: "";
-    //         position: absolute;
-    //         width: 0;
-    //         height: 0;
-    //         border-style: solid;
-    //         border-width: 20px 0 20px 20px;
-    //         border-color: transparent transparent transparent $bl;
-    //         top: calc(50% - 20px);
-    //         right: 8.5px;
-    //         transition: 0.2s ease-in-out;
-    //         opacity: 0;
-    //     }
-    //     @for $j from 1 through 8 {
-    //         &:first-of-type {
-    //             &:checked {
-    //                 & ~ .innerwrap {
-    //                     .cards {
-    //                         .cardwrap {
-    //                             &:first-of-type {
-    //                                 opacity: 0;
-    //                             }
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //         &:nth-of-type(8) {
-    //             &:checked {
-    //                 & ~ .innerwrap {
-    //                     .cards {
-    //                         .cardwrap {
-    //                             &:last-of-type {
-    //                                 opacity: 0;
-    //                             }
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //         &:nth-of-type(#{$j}) {
-    //             &:after {
-    //                 opacity: 1;
-    //             }
-    //             &:hover {
-    //                 &:after {
-    //                     border-color: transparent transparent transparent $w;
-    //                 }
-    //                 &:before {
-    //                     background: $bl;
-    //                 }
-    //             }
-    //             &:checked {
-    //                 pointer-events: none;
-    //                 transform: translateX(#{$j * 100%});
-    //                 & ~ .trigger {
-    //                     transform: translateX(#{$j * 0%});
-    //                     z-index: #{99 - $j};
-    //                 }
-    //                 & ~ .innerwrap {
-    //                     .cards {
-    //                         // transform: rotate(#{($j - 1) * 45}deg);
-    //                     }
-    //                     input {
-    //                         @for $i from 1 through 8 {
-    //                             &:nth-of-type(#{$i}) {
-    //                                 // transform: rotate(#{((($i - 2) + $j) * 45) + 45}deg);
-    //                             }
-    //                         }
-    //                     }
-    //                     .cardwrap {
-    //                         @for $i from 1 through 8 {
-    //                             &:last-of-type {
-    //                                 opacity: 1;
-    //                             }
-    //                             &:nth-of-type(#{$i}) {
-    //                                 .card {
-    //                                     // transform: rotate(#{(($i - 1) + $j) * -45}deg);
-    //                                 }
-    //                             }
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
+    background: linear-gradient(to bottom, variables.$sub-bg-color 50%, variables.$main-bg-color 50%);
+    cursor: grab;
+
     .innerwrap {
         position: absolute;
-        width: 1300px;
-        height: 1300px;
-        left: -725px;
+        width: 1600px;
+        height: 1600px;
+        left: -750px;
         top: -400px;
         z-index: 999;
-        input {
-            position: absolute;
-            top: calc(50% - 175px);
-            height: 350px;
-            width: 280px;
-            left: 900px;
-            transform-style: preserve-3d;
-            transform-origin: -350px;
-            perspective: 600px;
-            z-index: 7;
-            opacity: 0;
-            cursor: pointer;
-            &:before {
-                content: "";
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                left: 0%;
-                top: 0%;
-                z-index: 9;
-                pointer-events: none;
-            }
-            @for $i from 1 through 8 {
-                &:nth-of-type(#{$i}) {
-                    &:checked {
-                        &:before {
-                            width: 500%;
-                            left: -125%;
-                            height: 500%;
-                            top: -125%;
-                            pointer-events: auto;
-                        }
-                        &:hover {
-                            & ~ .cards {
-                                .cardwrap {
-                                    &:nth-of-type(#{$i}) {
-                                        .inner {
-                                            .text {
-                                                &:before {
-                                                    animation: turn 0.25s ease-in-out infinite alternate;
-                                                    @keyframes turn {
-                                                        from {
-                                                            // transform: rotate(-5deg);
-                                                        }
-                                                        to {
-                                                            // transform: rotate(5deg);
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        & ~ .cards {
-                            .cardwrap {
-                                z-index: -1;
-                                .card {
-                                    .inner {
-                                        // transform: rotateX(0deg)
-                                        //     translateZ(-100px)
-                                        //     scale(0.95)
-                                        //     translateY(-30px)
-                                        //     translateX(-50px);
-                                        .text,
-                                        .link {
-                                            p {
-                                                // transform: translateY(0px) skewY(0deg);
-                                                transition-delay: 0.8s;
-                                            }
-                                        }
-                                        .link {
-                                            p {
-                                                transition-delay: 1s;
-                                            }
-                                        }
-                                    }
-                                }
-                                &:nth-of-type(#{$i}) {
-                                    z-index: 2;
-                                    .card {
-                                        .inner {
-                                            // transform: rotateX(0deg)
-                                            //     translateZ(150px)
-                                            //     translateY(-20px)
-                                            //     translateX(-70px);
-                                            box-shadow: 0 20px 20px 0 rgba(0, 0, 0, 0.25);
-                                            .text,
-                                            .link {
-                                                transition:
-                                                    opacity 0s ease-in-out,
-                                                    transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-                                                    box-shadow 0.2s ease-in-out;
-                                                transition-delay: 0.3s, 0.6s, 0s;
-                                                // transform: translateX(150%) rotateX(0deg);
-                                                box-shadow: inherit;
-                                                opacity: 1;
-                                            }
-                                            .link {
-                                                transition-delay: 0.3s, 0.75s, 0s;
-                                                p {
-                                                    &:before {
-                                                        transition-delay: 0.95s;
-                                                    }
-                                                }
-                                            }
-                                            &:after {
-                                                // transform: skewX(0deg) translateZ(-1px) scale(1);
-                                            }
-                                            &:before {
-                                                // transform: translateZ(20px);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    // transform: rotate(#{($i - 1) * 45}deg);
-                    transition: 0.7s cubic-bezier(1, 0, 0, 1);
-                }
-            }
-        }
+        // transform: translateY(-80vh);
+
         .cards {
             position: absolute;
             width: 100%;
@@ -259,18 +114,20 @@ $t: rgba(255, 255, 255, 0.00001);
             left: -100px;
             top: 0;
             transition: 0.7s cubic-bezier(1, 0, 0, 1);
+            transform: rotate(315deg);
         }
 
         .cardwrap {
             position: absolute;
-            top: calc(50% - 150px);
-            height: 300px;
-            width: 250px;
+            top: calc(50% - 200px);
+            height: 400px;
+            width: 350px;
             left: 1000px;
             transform-style: preserve-3d;
-            transform-origin: -350px;
+            transform-origin: -370px;
             perspective: 800px;
             transition: 0.7s cubic-bezier(1, 0, 0, 1);
+
             @for $i from 1 through 8 {
                 &:last-of-type {
                     opacity: 0;
@@ -278,72 +135,74 @@ $t: rgba(255, 255, 255, 0.00001);
                 &:nth-of-type(1n) {
                     .card {
                         .inner {
-                            background: $b;
+                            background: variables.$text-color-bright;
                         }
                     }
                 }
                 &:nth-of-type(2n) {
                     .card {
                         .inner {
-                            background: $r;
+                            background: variables.$text-color-bright;
                         }
                     }
                 }
                 &:nth-of-type(3n) {
                     .card {
                         .inner {
-                            background: $y;
+                            background: variables.$text-color-bright;
                         }
                     }
                 }
                 &:nth-of-type(#{$i}) {
-                    // transform: rotate(#{($i) * 45}deg);
+                    transform: rotate(#{($i) * 45}deg);
 
                     .card {
-                        // transform: rotate(#{($i) * -45}deg);
+                        transform: rotate(#{(($i - 1) + 8) * -45}deg) rotateX(-30deg) translateZ(-100px);
                         transition: 0.7s cubic-bezier(1, 0, 0, 1);
+                        cursor: pointer;
+
                         .inner {
                             position: absolute;
-                            width: 112.5%;
-                            height: 112.5%;
-                            left: -0.675%;
-                            top: -0.675%;
-                            background: $r;
+                            width: 100%;
+                            height: 100%;
+                            left: 0%;
+                            top: 0%;
+                            background: variables.$text-color-bright;
                             transform-style: preserve-3d;
                             transform-origin: bottom;
                             // transform: rotateX(-30deg) translateZ(-100px);
-                            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                            transition: 0.3s cubic-bezier(0, 1, 0, 1);
                             pointer-events: none;
                             display: flex;
                             padding: 25px 25px 40px 25px;
                             box-sizing: border-box;
                             align-items: flex-end;
                             flex-wrap: wrap;
+
                             h1 {
-                                font-family: "Anton";
                                 text-transform: uppercase;
                                 letter-spacing: 1px;
                                 font-size: 40px;
                                 transform: translateZ(25px);
                                 position: relative;
-                                color: $bl;
+                                color: variables.$text-color-dark;
+
                                 span {
                                     position: absolute;
                                     font-size: 12px;
                                     top: -30px;
                                     left: 0;
                                     padding: 5px;
-                                    background: $bl;
-                                    color: $w;
+                                    background: variables.$text-color-bright;
+                                    color: variables.$text-color-dark;
                                 }
                             }
+
                             &:before {
                                 content: "0#{$i}";
                                 left: 25px;
                                 top: 25px;
                                 font-size: 75px;
-                                color: #bl;
-                                font-family: "Anton";
                                 position: absolute;
                                 transform: translateZ(1px);
                             }
@@ -370,23 +229,23 @@ $t: rgba(255, 255, 255, 0.00001);
                                     border-radius: 100%;
                                     background: linear-gradient(
                                             45deg,
-                                            $t calc(50% - 2px),
-                                            $w calc(50% - 2px),
-                                            $w calc(50% + 2px),
-                                            $t calc(50% + 2px)
+                                            variables.$text-color-dark calc(50% - 2px),
+                                            variables.$text-color-dark calc(50% - 2px),
+                                            variables.$text-color-dark calc(50% + 2px),
+                                            variables.$text-color-dark calc(50% + 2px)
                                         ),
                                         linear-gradient(
                                             -45deg,
-                                            $t calc(50% - 2px),
-                                            $w calc(50% - 2px),
-                                            $w calc(50% + 2px),
-                                            $t calc(50% + 2px)
+                                            variables.$text-color-dark calc(50% - 2px),
+                                            variables.$text-color-dark calc(50% - 2px),
+                                            variables.$text-color-dark calc(50% + 2px),
+                                            variables.$text-color-dark calc(50% + 2px)
                                         ),
-                                        $r;
+                                        variables.$text-color-bright;
                                     z-index: 999;
                                     top: 10px;
                                     right: 10px;
-                                    box-shadow: inset 0 0 0 5px $r;
+                                    box-shadow: inset 0 0 0 5px variables.$text-color-bright;
                                     transition: 0.2s ease-in-out;
                                 }
                             }
@@ -398,12 +257,12 @@ $t: rgba(255, 255, 255, 0.00001);
                                 height: 60%;
                                 left: 0;
                                 top: 0;
-                                background: $bl;
+                                background: variables.$text-color-bright;
                                 transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1);
                                 // transform: translateX(150%) rotateX(90deg);
                                 opacity: 0;
                                 transform-origin: bottom;
-                                color: $w;
+                                color: variables.$text-color-dark;
                                 padding: 25px;
                                 display: flex;
                                 align-items: center;
@@ -423,8 +282,8 @@ $t: rgba(255, 255, 255, 0.00001);
                                 transform-origin: top;
                                 height: calc(40% - 15px);
                                 top: calc(60% + 15px);
-                                background: $w;
-                                color: $bl;
+                                background: variables.$text-color-dark;
+                                color: variables.$text-color-bright;
                                 // transform: translateX(150%) rotateX(-90deg);
                                 p {
                                     transform: translateY(200px) skewY(-20deg);
