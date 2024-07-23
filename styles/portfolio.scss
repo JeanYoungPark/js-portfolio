@@ -39,15 +39,32 @@
                     height: 100%;
                     background: variables.$text-color-bright;
                     transition: 0.7s cubic-bezier(1, 0, 0, 1);
+                    transform: rotateX(-30deg) translateZ(-100px);
+                    transform-style: preserve-3d;
 
-                    .text {
+                    .text,
+                    .link {
                         position: absolute;
                         width: 70%;
-                        height: 60%;
+                        left: 0;
                         transition: 0.2s cubic-bezier(1, 0, 0, 1);
-                        transform: translateX(150%) rotateY(90deg);
-                        transform-origin: bottom;
                         padding: 25px;
+                        background: variables.$text-color-bright;
+                        opacity: 0;
+                    }
+
+                    .text {
+                        height: 60%;
+                        top: 0;
+                        transform: translateX(150%) rotateX(90deg);
+                        transform-origin: bottom;
+                    }
+
+                    .link {
+                        height: calc(40% - 15px);
+                        top: calc(60% + 15px);
+                        transform: translateX(150%) rotateX(90deg);
+                        transform-origin: top;
                     }
                 }
 
@@ -71,235 +88,27 @@
                             .inner {
                                 width: 600px;
                                 height: 550px;
-                                transform: rotate(#{($i - 1) * 45}deg) rotateX(0deg) translateZ(100px) translateY(-100px) translateX(-200px);
+                                transform: rotate(#{(($i - 1) + 8) * -45}deg) rotateX(0deg) translateZ(100px) translateY(-100px) translateX(-200px);
                                 box-shadow: 0 20px 20px 0 rgba(0, 0, 0, 0.25);
 
-                                // .text {
-                                //     transition: opacity 0 ease-in-out transform 0.3s cubic-bezier(0, 1, 0, 1), box-shadow 0.2s ease-in-out;
-                                //     transition-delay: 0.3s, 0.6s, 0;
-                                //     transform: translateX(150%) rotateX(0deg);
-                                // }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-#wrap {
-    width: 100%;
-    height: 100vh;
-    box-shadow: 0 20px 30px -5px rgba(0, 0, 0, 0.15);
-    overflow: hidden;
-    position: relative;
-    transform-style: preserve-3d;
-    background: linear-gradient(to bottom, variables.$sub-bg-color 50%, variables.$main-bg-color 50%);
-    cursor: grab;
-
-    .innerwrap {
-        position: absolute;
-        width: 1600px;
-        height: 1600px;
-        left: -750px;
-        top: -400px;
-        z-index: 999;
-        // transform: translateY(-80vh);
-
-        .cards {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            left: -100px;
-            top: 0;
-            transition: 0.7s cubic-bezier(1, 0, 0, 1);
-            transform: rotate(315deg);
-        }
-
-        .cardwrap {
-            position: absolute;
-            top: calc(50% - 200px);
-            height: 400px;
-            width: 350px;
-            left: 1000px;
-            transform-style: preserve-3d;
-            transform-origin: -370px;
-            perspective: 800px;
-            transition: 0.7s cubic-bezier(1, 0, 0, 1);
-
-            @for $i from 1 through 8 {
-                &:last-of-type {
-                    opacity: 0;
-                }
-                &:nth-of-type(1n) {
-                    .card {
-                        .inner {
-                            background: variables.$text-color-bright;
-                        }
-                    }
-                }
-                &:nth-of-type(2n) {
-                    .card {
-                        .inner {
-                            background: variables.$text-color-bright;
-                        }
-                    }
-                }
-                &:nth-of-type(3n) {
-                    .card {
-                        .inner {
-                            background: variables.$text-color-bright;
-                        }
-                    }
-                }
-                &:nth-of-type(#{$i}) {
-                    transform: rotate(#{($i) * 45}deg);
-
-                    .card {
-                        transform: rotate(#{(($i - 1) + 8) * -45}deg) rotateX(-30deg) translateZ(-100px);
-                        transition: 0.7s cubic-bezier(1, 0, 0, 1);
-                        cursor: pointer;
-
-                        .inner {
-                            position: absolute;
-                            width: 100%;
-                            height: 100%;
-                            left: 0%;
-                            top: 0%;
-                            background: variables.$text-color-bright;
-                            transform-style: preserve-3d;
-                            transform-origin: bottom;
-                            // transform: rotateX(-30deg) translateZ(-100px);
-                            transition: 0.3s cubic-bezier(0, 1, 0, 1);
-                            pointer-events: none;
-                            display: flex;
-                            padding: 25px 25px 40px 25px;
-                            box-sizing: border-box;
-                            align-items: flex-end;
-                            flex-wrap: wrap;
-
-                            h1 {
-                                text-transform: uppercase;
-                                letter-spacing: 1px;
-                                font-size: 40px;
-                                transform: translateZ(25px);
-                                position: relative;
-                                color: variables.$text-color-dark;
-
-                                span {
-                                    position: absolute;
-                                    font-size: 12px;
-                                    top: -30px;
-                                    left: 0;
-                                    padding: 5px;
-                                    background: variables.$text-color-bright;
-                                    color: variables.$text-color-dark;
+                                .text,
+                                .link {
+                                    transition: opacity 0s ease-in-out, transform 0.3s cubic-bezier(0, 1, 0, 1), box-shadow 0.2s ease-in-out;
+                                    transform: translateX(150%) rotateX(0deg);
+                                    opacity: 1;
                                 }
-                            }
 
-                            &:before {
-                                content: "0#{$i}";
-                                left: 25px;
-                                top: 25px;
-                                font-size: 75px;
-                                position: absolute;
-                                transform: translateZ(1px);
-                            }
-                            &:after {
-                                content: "";
-                                position: absolute;
-                                width: 100%;
-                                height: 75%;
-                                bottom: 0;
-                                left: 0;
-                                background: linear-gradient(to bottom, rgba(0, 0, 0, 0.00001), rgba(0, 0, 0, 0.1));
-                                transform-origin: bottom;
-                                transform-style: preserve-3d;
-                                z-index: -1;
-                                transform: skewX(-10deg) translateZ(-1px) scale(1);
-                                transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                            }
-                            .text {
-                                &:before {
-                                    content: "";
-                                    position: absolute;
-                                    width: 30px;
-                                    height: 30px;
-                                    border-radius: 100%;
-                                    background: linear-gradient(
-                                            45deg,
-                                            variables.$text-color-dark calc(50% - 2px),
-                                            variables.$text-color-dark calc(50% - 2px),
-                                            variables.$text-color-dark calc(50% + 2px),
-                                            variables.$text-color-dark calc(50% + 2px)
-                                        ),
-                                        linear-gradient(
-                                            -45deg,
-                                            variables.$text-color-dark calc(50% - 2px),
-                                            variables.$text-color-dark calc(50% - 2px),
-                                            variables.$text-color-dark calc(50% + 2px),
-                                            variables.$text-color-dark calc(50% + 2px)
-                                        ),
-                                        variables.$text-color-bright;
-                                    z-index: 999;
-                                    top: 10px;
-                                    right: 10px;
-                                    box-shadow: inset 0 0 0 5px variables.$text-color-bright;
-                                    transition: 0.2s ease-in-out;
+                                .text {
+                                    transition-delay: 0.3s, 0.6s, 0s;
                                 }
-                            }
-                            .text,
-                            .link {
-                                box-sizing: border-box;
-                                position: absolute;
-                                width: 70%;
-                                height: 60%;
-                                left: 0;
-                                top: 0;
-                                background: variables.$text-color-bright;
-                                transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1);
-                                // transform: translateX(150%) rotateX(90deg);
-                                opacity: 0;
-                                transform-origin: bottom;
-                                color: variables.$text-color-dark;
-                                padding: 25px;
-                                display: flex;
-                                align-items: center;
-                                text-transform: uppercase;
-                                overflow: hidden;
-                                p {
-                                    font-size: 12px;
-                                    margin-top: 0;
-                                    line-height: 1.5;
-                                    position: relative;
-                                    font-family: "Raleway";
-                                    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1);
-                                    transform: translateY(200px) skewY(20deg);
-                                }
-                            }
-                            .link {
-                                transform-origin: top;
-                                height: calc(40% - 15px);
-                                top: calc(60% + 15px);
-                                background: variables.$text-color-dark;
-                                color: variables.$text-color-bright;
-                                // transform: translateX(150%) rotateX(-90deg);
-                                p {
-                                    transform: translateY(200px) skewY(-20deg);
+
+                                .link {
+                                    transition-delay: 0.3s, 0.75s, 0s;
                                 }
                             }
                         }
                     }
                 }
-            }
-            .card {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                transform-style: preserve-3d;
             }
         }
     }
