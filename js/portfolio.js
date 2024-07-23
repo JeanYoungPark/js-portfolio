@@ -20,18 +20,14 @@ class CardMovement {
 
     //card slide move up
     up() {
-        this.targetIndex = this.currentIndex + 1;
+        this.targetIndex = this.currentIndex === this.cardElms.length - 1 ? 0 : this.currentIndex + 1;
 
         // change all of cards transform
         for (let index = 0; index < this.cardElms.length; index++) {
             // no more last card
-            if (this.targetIndex === this.cardElms.length) {
-                this.cardElms[index].querySelector(".inner").style.transform = `rotate(${-360 + 45 * -index}deg) rotateX(-30deg) translateZ(-100px)`;
-            } else {
-                this.cardElms[index].querySelector(".inner").style.transform = `rotate(${
-                    -360 + 45 * (this.targetIndex - index)
-                }deg) rotateX(-30deg) translateZ(-100px)`;
-            }
+            this.cardElms[index].querySelector(".inner").style.transform = `rotate(${
+                -360 + 45 * (this.targetIndex - index)
+            }deg) rotateX(-30deg) translateZ(-100px)`;
         }
 
         this.rotateCards();
@@ -39,16 +35,12 @@ class CardMovement {
 
     //card slide move down
     down() {
-        this.targetIndex = this.currentIndex - 1;
+        this.targetIndex = this.currentIndex === 0 ? this.cardElms.length - 1 : this.currentIndex - 1;
 
         for (let index = 0; index < this.cardElms.length; index++) {
-            if (this.targetIndex === -1) {
-                this.cardElms[index].querySelector(".inner").style.transform = `rotate(${-360 + 45 * -index}deg) rotateX(-30deg) translateZ(-100px)`;
-            } else {
-                this.cardElms[index].querySelector(".inner").style.transform = `rotate(${
-                    -360 + 45 * (this.targetIndex - index)
-                }deg) rotateX(-30deg) translateZ(-100px)`;
-            }
+            this.cardElms[index].querySelector(".inner").style.transform = `rotate(${
+                -360 + 45 * (this.targetIndex - index)
+            }deg) rotateX(-30deg) translateZ(-100px)`;
         }
 
         this.rotateCards();
@@ -57,19 +49,9 @@ class CardMovement {
     // rotate container of cards
     rotateCards() {
         // no more cards
-        if (this.cardElms.length === this.targetIndex) {
-            this.cardElms[this.currentIndex].classList.remove("active");
-            this.cardElms[0].classList.add("active");
-            this.cardElmsWrapper.style.transform = "rotate(0deg)";
-            return;
-        }
-
-        if (this.currentIndex > -1) {
-            this.cardElms[this.currentIndex].classList.remove("active");
-            this.cardElms[this.targetIndex].classList.add("active");
-            this.cardElmsWrapper.style.transform = `rotate(${this.targetIndex * -45}deg)`;
-            return;
-        }
+        this.cardElms[this.currentIndex].classList.remove("active");
+        this.cardElms[this.targetIndex].classList.add("active");
+        this.cardElmsWrapper.style.transform = `rotate(${this.targetIndex * -45}deg)`;
     }
 
     // click card
