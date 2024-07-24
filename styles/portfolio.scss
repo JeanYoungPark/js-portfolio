@@ -1,0 +1,173 @@
+@use "./_variables";
+
+.portfolio-container {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(to bottom, variables.$sub-bg-color 50%, variables.$main-bg-color 50%);
+
+    .portfolio {
+        position: relative;
+        width: 1500px;
+        height: 1500px;
+
+        .cards {
+            position: absolute;
+            top: -100px;
+            left: -700px;
+            width: 100%;
+            height: 100%;
+            transform: rotate(0);
+            transition: 0.7s cubic-bezier(1, 0, 0, 1);
+
+            .card {
+                position: absolute;
+                left: 1250px;
+                top: calc(50% - 200px);
+                width: 350px;
+                height: 400px;
+                transform-origin: -480px;
+                transform-style: preserve-3d;
+                perspective: 800px;
+                transition: 0.7s cubic-bezier(1, 0, 0, 1);
+                z-index: 10;
+                cursor: pointer;
+
+                .inner {
+                    position: relative;
+                    width: 100%;
+                    height: 100%;
+                    background: variables.$text-color-bright;
+                    transition: 0.7s cubic-bezier(1, 0, 0, 1);
+                    transform: rotateX(-30deg) translateZ(-100px);
+                    transform-style: preserve-3d;
+
+                    .text,
+                    .link {
+                        position: absolute;
+                        width: 70%;
+                        left: 0;
+                        transition: 0.2s cubic-bezier(1, 0, 0, 1);
+                        padding: 25px;
+                        background: variables.$text-color-bright;
+                        opacity: 0;
+                    }
+
+                    .text {
+                        height: 60%;
+                        top: 0;
+                        transform: translateX(150%) rotateX(90deg);
+                        transform-origin: bottom;
+                    }
+
+                    .link {
+                        height: calc(40% - 15px);
+                        top: calc(60% + 15px);
+                        transform: translateX(150%) rotateX(90deg);
+                        transform-origin: top;
+                    }
+                }
+
+                @for $i from 1 through 8 {
+                    &:nth-of-type(#{$i}) {
+                        transform: rotate(#{($i - 1) * 45}deg);
+
+                        .inner {
+                            transform: rotate(#{(($i - 1) + 8) * -45}deg) rotateX(-30deg) translateZ(-100px);
+                        }
+
+                        &.active {
+                            .inner {
+                                transform: rotate(-360deg) rotateX(-30deg) translateZ(-100px);
+                            }
+                        }
+
+                        &.clicked {
+                            z-index: 11;
+
+                            .inner {
+                                width: 600px;
+                                height: 550px;
+                                transform: rotate(#{(($i - 1) + 8) * -45}deg) rotateX(0deg) translateZ(100px) translateY(-100px) translateX(-200px);
+                                box-shadow: 0 20px 20px 0 rgba(0, 0, 0, 0.25);
+
+                                .text,
+                                .link {
+                                    transition: opacity 0s ease-in-out, transform 0.3s cubic-bezier(0, 1, 0, 1), box-shadow 0.2s ease-in-out;
+                                    transform: translateX(150%) rotateX(0deg);
+                                    opacity: 1;
+                                }
+
+                                .text {
+                                    transition-delay: 0.3s, 0.6s, 0s;
+                                }
+
+                                .link {
+                                    transition-delay: 0.3s, 0.75s, 0s;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.info {
+    position: fixed;
+    right: 20%;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    animation: showInfo 1s forwards 1s;
+    opacity: 0;
+
+    &.hide {
+        opacity: 1;
+        animation: hideInfo 1s forwards 2s;
+    }
+
+    p {
+        padding-left: 60px;
+        color: variables.$text-color-bright;
+        font-size: 1.5em;
+    }
+
+    .grab {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 50px;
+        height: 50px;
+        animation: grab 1.5s infinite cubic-bezier(0.5, 0, 0, 1) 2s;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+}
+
+@keyframes showInfo {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes hideInfo {
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes grab {
+    0%,
+    100% {
+        top: -20px;
+    }
+    100% {
+        top: 30px;
+    }
+}
