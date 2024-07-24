@@ -50,6 +50,7 @@ class CardMovement {
     rotateCards() {
         // no more cards
         this.cardElms[this.currentIndex].classList.remove("active");
+        this.cardElms[this.currentIndex].classList.remove("clicked");
         this.cardElms[this.targetIndex].classList.add("active");
         this.cardElmsWrapper.style.transform = `rotate(${this.targetIndex * -45}deg)`;
     }
@@ -71,6 +72,8 @@ class CardMovement {
             this.cardElms.forEach((card) => {
                 card.classList.remove("clicked");
             });
+
+            elm.querySelector(".inner").style.transform = `rotate(${-360 + 45 * -(this.targetIndex + 1)}deg) rotateX(-30deg) translateZ(-100px)`;
         } else {
             this.cardElms.forEach((card) => {
                 card.classList.remove("clicked");
@@ -79,18 +82,26 @@ class CardMovement {
             elm.classList.add("clicked");
             elm.querySelector(".inner").style.transform = `rotate(${
                 -360 + 45 * -(this.targetIndex + 1)
-            }deg) rotateX(0deg) translateZ(100px) translateY(-100px) translateX(-200px)`;
+            }deg) rotateX(0deg) translateZ(150px) translateY(-100px) translateX(0)`;
         }
     }
 }
 
+const isFirst = false;
 const container = document.querySelector(".portfolio-container");
 const card = document.querySelectorAll(".card");
+const info = document.querySelector(".info");
 
 let startX = 0,
     startY = 0,
     newX = 0,
     newY = 0;
+
+const checkIsFirst = () => {
+    if (!isFirst) {
+        info.classList.add("hide");
+    }
+};
 
 // handle pointer and start positions
 container.addEventListener("mousedown", (e) => {
@@ -108,8 +119,10 @@ document.addEventListener("mouseup", (e) => {
 
     if (startY - e.clientY > 200) {
         cardClass.up();
+        checkIsFirst();
     } else if (e.clientY - startY > 200) {
         cardClass.down();
+        checkIsFirst();
     }
 });
 
@@ -130,5 +143,7 @@ card.forEach((el) => {
             el.classList.add("active");
             cardClass.click(el);
         }
+
+        checkIsFirst();
     });
 });

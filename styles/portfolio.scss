@@ -113,3 +113,61 @@
         }
     }
 }
+
+.info {
+    position: fixed;
+    right: 20%;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    animation: showInfo 1s forwards 1s;
+    opacity: 0;
+
+    &.hide {
+        opacity: 1;
+        animation: hideInfo 1s forwards 2s;
+    }
+
+    p {
+        padding-left: 60px;
+        color: variables.$text-color-bright;
+        font-size: 1.5em;
+    }
+
+    .grab {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 50px;
+        height: 50px;
+        animation: grab 1.5s infinite cubic-bezier(0.5, 0, 0, 1) 2s;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+}
+
+@keyframes showInfo {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes hideInfo {
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes grab {
+    0%,
+    100% {
+        top: -20px;
+    }
+    100% {
+        top: 30px;
+    }
+}
