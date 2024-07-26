@@ -1,3 +1,8 @@
+svg {
+  width: 0;
+  height: 0;
+}
+
 .contact-container {
   display: flex;
   justify-content: center;
@@ -10,7 +15,7 @@
   position: relative;
   border-radius: 20px;
   transform-style: preserve-3d;
-  margin-right: 100px;
+  margin-right: 150px;
 }
 .contact-container .card .elements {
   position: absolute;
@@ -97,61 +102,104 @@
   border-top: 1px solid rgba(238, 238, 238, 0.75);
   border-left: 1px solid rgba(238, 238, 238, 0.75);
   border-radius: 20px;
-  box-shadow: 0 25px 45px rgba(34, 40, 49, 0.05);
+  box-shadow: 0 25px 45px rgba(34, 40, 49, 0.5);
   transform-style: preserve-3d;
 }
 .contact-container .contact {
+  position: relative;
   width: 600px;
+  height: 600px;
+}
+.contact-container .contact .liquid-box {
+  position: relative;
+  width: 100%;
+  height: 100%;
   border-radius: 20px;
   border: 1px solid rgba(238, 238, 238, 0.5);
   border-top: 1px solid rgba(238, 238, 238, 0.75);
   border-left: 1px solid rgba(238, 238, 238, 0.75);
   box-shadow: 0 25px 45px rgba(34, 40, 49, 0.05);
   background: rgba(238, 238, 238, 0.5);
-  padding: 30px;
+  filter: url(#gooey);
 }
-.contact-container .contact h3 {
+.contact-container .contact .liquid-box .drops {
+  position: absolute;
+  top: 0;
+  aspect-ratio: 1/1;
+  width: 20px;
+  background: #fff;
+  border-radius: 50%;
+  z-index: 1000;
+  background: rgba(238, 238, 238, 0.5);
+  animation: animate 5s ease-in-out forwards;
+}
+@keyframes animate {
+  0% {
+    transform: translateX(-50%) translateY(calc(-50vh - 100%));
+  }
+  25% {
+    transform: translateX(-50%) translateY(-100%);
+  }
+  50% {
+    transform: translateX(-50%) translateY(0);
+  }
+  75% {
+    transform: translateX(-50%) translateY(100%);
+  }
+  100% {
+    transform: translateX(-50%) translateY(calc(70vh - 100%));
+  }
+}
+.contact-container .contact .elements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 30px;
+  width: 100%;
+  height: 100%;
+}
+.contact-container .contact .elements h3 {
   text-align: right;
   font-size: 1.75em;
   margin-bottom: 20px;
-  color: #eee;
+  color: #393e46;
 }
-.contact-container .contact .elem {
+.contact-container .contact .elements .elem {
   width: 100%;
   display: flex;
   align-items: center;
   margin-bottom: 15px;
 }
-.contact-container .contact .elem label {
+.contact-container .contact .elements .elem label {
   width: 20%;
-  color: #eee;
+  color: #222831;
 }
-.contact-container .contact .elem p {
+.contact-container .contact .elements .elem p {
   width: 80%;
 }
-.contact-container .contact .elem p input {
+.contact-container .contact .elements .elem p input {
   width: 100%;
   border-radius: 10px;
   padding: 15px;
   border: none;
   font-size: 1em;
 }
-.contact-container .contact textarea {
+.contact-container .contact .elements textarea {
   width: 100%;
   min-height: 200px;
   border-radius: 10px;
   padding: 15px;
   border: none;
   font-size: 1em;
-  resize: vertical;
+  resize: none;
 }
-.contact-container .contact button {
+.contact-container .contact .elements button {
   padding: 15px 40px;
-  color: white;
+  background: #393e46;
   border: none;
   border-radius: 10px;
   font-size: 1em;
-  color: #222831;
+  color: #eee;
   font-weight: 600;
   margin-top: 10px;
 }

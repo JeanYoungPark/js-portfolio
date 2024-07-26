@@ -56,25 +56,40 @@
                 <div class="backCard"></div>
             </div>
             <div class="contact">
-                <h3>Contact Me</h3>
-                <div class="form">
-                    <div class="elem">
-                        <label>title</label>
-                        <p><input type="text" placeholder="title" /></p>
+                <div class="liquid-box"></div>
+                <div class="elements">
+                    <h3>Contact Me</h3>
+                    <div class="form">
+                        <div class="elem">
+                            <label>title</label>
+                            <p><input type="text" placeholder="title" /></p>
+                        </div>
+                        <div class="elem">
+                            <label>name</label>
+                            <p><input type="text" placeholder="name" /></p>
+                        </div>
+                        <div class="elem">
+                            <label>email</label>
+                            <p><input type="email" placeholder="email" /></p>
+                        </div>
+                        <textarea placeholder="Type your message."></textarea>
                     </div>
-                    <div class="elem">
-                        <label>name</label>
-                        <p><input type="text" placeholder="name" /></p>
-                    </div>
-                    <div class="elem">
-                        <label>email</label>
-                        <p><input type="email" placeholder="email" /></p>
-                    </div>
-                    <textarea placeholder="Type your message."></textarea>
+                    <button type="submit">SEND</button>
                 </div>
-                <button type="submit">SEND</button>
             </div>
         </div>
+        <svg>
+            <filter id="gooey">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="10" />
+                <feColorMatrix
+                    values="
+                1 0 0 0 0
+                0 1 0 0 0
+                0 0 1 0 0
+                0 0 0 50 -10
+                " />
+            </filter>
+        </svg>
         <script
             src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"
             integrity="sha512-wC/cunGGDjXSl9OHUH0RuqSyW4YNLlsPwhcLxwWW1CR4OeC2E1xpcdZz2DeQkEmums41laI+eGMw95IJ15SS3g=="
