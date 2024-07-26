@@ -1,0 +1,225 @@
+@use "./_variables";
+
+svg {
+    width: 0;
+    height: 0;
+}
+.contact-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+
+    .card {
+        position: relative;
+        border-radius: 20px;
+        transform-style: preserve-3d;
+        margin-right: 150px;
+
+        .elements {
+            position: absolute;
+            top: 50px;
+            left: -30px;
+            width: 300px;
+            height: 100px;
+            background: rgba(variables.$text-color-dark, 0.1);
+            transform: translateZ(80px);
+            border: 1px solid rgba(variables.$text-color-bright, 0.5);
+            border-top: 1px solid rgba(variables.$text-color-bright, 0.75);
+            border-left: 1px solid rgba(variables.$text-color-bright, 0.75);
+            box-shadow: 0 25px 45px rgba(variables.$text-color-dark, 0.05);
+            border-radius: 10px;
+
+            &.bg::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: url();
+                background-size: 60px;
+                background-repeat: no-repeat;
+            }
+
+            &.imgBx {
+                top: 0;
+                left: initial;
+                right: 60px;
+                width: 120px;
+                height: 120px;
+                padding: 10px;
+                transform: translateZ(120px);
+
+                img {
+                    position: absolute;
+                    width: calc(100% - 20px);
+                    border-radius: 8px;
+                    border-radius: 8px;
+                    border: 1px solid rgba(variables.$text-color-bright, 0.5);
+                    border-top: 1px solid rgba(variables.$text-color-bright, 0.75);
+                    border-left: 1px solid rgba(variables.$text-color-bright, 0.75);
+                    box-shadow: 0 25px 45px rgba(variables.$text-color-dark, 0.05);
+                }
+            }
+
+            &.name {
+                top: 135px;
+                left: initial;
+                right: 0;
+                width: 100%;
+                padding: 10px;
+                text-align: right;
+                transform: translateZ(100px);
+                background: transparent;
+                backdrop-filter: blur(0);
+                border: none;
+                box-shadow: none;
+                color: variables.$text-color-bright;
+            }
+
+            &.content {
+                top: initial;
+                left: initial;
+                bottom: 0;
+                right: -20px;
+                width: 85%;
+                min-height: 200px;
+                padding: 10px;
+                transform: translateZ(180px);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: variables.$text-color-bright;
+
+                p {
+                    position: relative;
+                    font-size: 0.85em;
+                }
+            }
+        }
+
+        .backCard {
+            position: relative;
+            background: rgba(variables.$text-color-bright, 0.5);
+            width: 300px;
+            min-height: 400px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(variables.$text-color-bright, 0.5);
+            border-top: 1px solid rgba(variables.$text-color-bright, 0.75);
+            border-left: 1px solid rgba(variables.$text-color-bright, 0.75);
+            border-radius: 20px;
+            box-shadow: 0 25px 45px rgba(variables.$text-color-dark, 0.5);
+            transform-style: preserve-3d;
+        }
+    }
+
+    .contact {
+        position: relative;
+        width: 600px;
+        height: 600px;
+
+        .liquid-box {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            border: 1px solid rgba(variables.$text-color-bright, 0.5);
+            border-top: 1px solid rgba(variables.$text-color-bright, 0.75);
+            border-left: 1px solid rgba(variables.$text-color-bright, 0.75);
+            box-shadow: 0 25px 45px rgba(variables.$text-color-dark, 0.05);
+            background: rgba(variables.$text-color-bright, 0.5);
+            filter: url(#gooey);
+
+            .drops {
+                position: absolute;
+                top: 0;
+                aspect-ratio: 1/1;
+                width: 20px;
+                background: #fff;
+                border-radius: 50%;
+                z-index: 1000;
+                background: rgba(variables.$text-color-bright, 0.5);
+                animation: animate 5s ease-in-out forwards;
+            }
+
+            @keyframes animate {
+                0% {
+                    transform: translateX(-50%) translateY(calc(-50vh - 100%));
+                }
+                25% {
+                    transform: translateX(-50%) translateY(calc(-100%));
+                }
+                50% {
+                    transform: translateX(-50%) translateY(calc(-0));
+                }
+                75% {
+                    transform: translateX(-50%) translateY(calc(100%));
+                }
+                100% {
+                    transform: translateX(-50%) translateY(calc(70vh - 100%));
+                }
+            }
+        }
+
+        .elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 30px;
+            width: 100%;
+            height: 100%;
+
+            h3 {
+                text-align: right;
+                font-size: 1.75em;
+                margin-bottom: 20px;
+                color: variables.$sub-bg-color;
+            }
+
+            .elem {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                margin-bottom: 15px;
+
+                label {
+                    width: 20%;
+                    color: variables.$text-color-dark;
+                }
+
+                p {
+                    width: 80%;
+
+                    input {
+                        width: 100%;
+                        border-radius: 10px;
+                        padding: 15px;
+                        border: none;
+                        font-size: 1em;
+                    }
+                }
+            }
+
+            textarea {
+                width: 100%;
+                min-height: 200px;
+                border-radius: 10px;
+                padding: 15px;
+                border: none;
+                font-size: 1em;
+                resize: none;
+            }
+
+            button {
+                padding: 15px 40px;
+                background: variables.$sub-bg-color;
+                border: none;
+                border-radius: 10px;
+                font-size: 1em;
+                color: variables.$text-color-bright;
+                font-weight: 600;
+                margin-top: 10px;
+            }
+        }
+    }
+}
