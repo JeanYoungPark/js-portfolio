@@ -9,7 +9,7 @@
   <br />
   <em>Like this Project? Please visit my <a href="#">Website</a> :)</em>
   <br /><br />
-  <p>dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd<br />dsfdfdsfsdgfdgdfgdfgsdfgs<br />dfdgfd;gjdflgldfkgjdfg;lfk;gkd;flgk;dlfglkfglksdg</p>
+  <p></p>
 </div>
 
 ## Contents
@@ -34,8 +34,8 @@
 
 ---
 
-// 여기에 완성된 이미지<br />
-use can also clone this project to see what I did!
+<!-- // 여기에 완성된 이미지<br />
+use can also clone this project to see what I did! -->
 
 ### Installation
 
@@ -60,4 +60,4 @@ cd portfolio
 If you interested in my project or want to work together, feel free to contact me :)
 
 -   Email : **jean.young.park.96@gmail.com**
--   LinkedIn:
+<!-- -   LinkedIn: -->
