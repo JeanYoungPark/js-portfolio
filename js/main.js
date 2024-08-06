@@ -45,7 +45,6 @@ class App {
     }
 
     _setupTransformControls() {
-        // Create TransformControls instance
         this._transformControls = new TransformControls(this._camera, this._renderer.domElement);
         this._scene.add(this._transformControls);
     }
@@ -94,7 +93,6 @@ class App {
                 }
 
                 if (!newAction.isRunning()) {
-                    //     animationMap[animationName].play();
                     newAction.reset().fadeIn(0.2).play();
                 }
 
@@ -126,7 +124,7 @@ class App {
                 const boundingBox = new THREE.Box3().setFromObject(model);
 
                 // 축소 비율 설정 (여기서는 0.9로 설정했습니다)
-                const scaleFactor = 0.4;
+                const scaleFactor = 0.3;
 
                 const size = new THREE.Vector3();
                 boundingBox.getSize(size);

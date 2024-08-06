@@ -12,7 +12,7 @@ ul {
 }
 
 body {
-  background-color: #222831;
+  background-color: #eee0c9;
 }
 
 body.lock {
@@ -30,7 +30,7 @@ body.lock {
   cursor: pointer;
   transition: 0.5s;
   z-index: 999;
-  color: #eee;
+  color: #f1f0e8;
 }
 #menu:hover {
   transform-origin: center;
@@ -49,7 +49,7 @@ body.lock {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #222831;
+  background: #eee0c9;
   transform-origin: center center;
   transform: scale(0);
   transition: 0.3s;
@@ -65,7 +65,7 @@ body.lock {
 #menu-popup ul li {
   position: relative;
   z-index: var(--i);
-  background: #393e46;
+  background: #adc4ce;
   width: 200px;
   transition: 0.5s;
 }
@@ -76,7 +76,7 @@ body.lock {
   left: -40px;
   height: 100%;
   width: 40px;
-  background: #393e46;
+  background: #adc4ce;
   filter: brightness(0.7);
   transform-origin: right;
   transform: skewY(45deg);
@@ -89,21 +89,21 @@ body.lock {
   position: absolute;
   top: -40px;
   left: 0;
-  background: #393e46;
+  background: #adc4ce;
   filter: brightness(0.8);
   transform-origin: bottom;
   transform: skewX(45deg);
   transition: 0.5s;
 }
 #menu-popup ul li:last-child::after {
-  box-shadow: -150px 150px 30px #222831;
+  box-shadow: -150px 150px 30px #eee0c9;
 }
 #menu-popup ul li:hover {
   transform: translate(20px, 20px);
-  background: #ffd369;
+  background: #96b6c5;
 }
 #menu-popup ul li:hover::after, #menu-popup ul li:hover::before {
-  background: #ffd369;
+  background: #96b6c5;
 }
 #menu-popup ul li:hover a {
   color: #222831;
@@ -115,7 +115,7 @@ body.lock {
   display: block;
   padding: 20px;
   text-decoration: none;
-  color: #eee;
+  color: #f1f0e8;
 }
 #menu-popup ul li a span {
   position: absolute;
@@ -143,7 +143,7 @@ body.lock {
   font-size: 1.5em;
   cursor: pointer;
   transition: 0.3s;
-  color: #eee;
+  color: #f1f0e8;
 }
 #close:hover {
   transform-origin: center;

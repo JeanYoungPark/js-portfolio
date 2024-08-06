@@ -20,11 +20,11 @@
 }
 .typing-container .typing .text.first {
   padding-right: 10px;
-  color: #eee;
+  color: #f1f0e8;
 }
 .typing-container .typing .text.sec {
-  color: #ffd369;
-  text-shadow: 0 0 5px #ffd369;
+  color: #96b6c5;
+  text-shadow: 0 0 5px #96b6c5;
 }
 .typing-container .typing .text.sec::after {
   content: "";
@@ -33,8 +33,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: #222831;
-  border-left: 2px solid #ffd369;
+  background: #eee0c9;
+  border-left: 2px solid #96b6c5;
   animation: animateTyping 4s steps(12) infinite;
 }
 
@@ -60,7 +60,7 @@
   left: 0;
   width: 100%;
   height: 300vh;
-  background: #222831;
+  background: #eee0c9;
   z-index: 0;
 }
 .about-container .description {
@@ -69,7 +69,7 @@
   transform: translateY(-50%);
   z-index: 1;
   padding: 0 20vw;
-  color: #eee;
+  color: #f1f0e8;
 }
 .about-container .description.active {
   position: fixed;
@@ -109,7 +109,7 @@
      object-fit: contain;
 }
 .about-container .description span.active {
-  color: #ffd369;
+  color: #96b6c5;
 }
 
 .skill-container {
@@ -126,14 +126,14 @@
   left: 0;
   width: 100%;
   height: 100vh;
-  background: #222831;
+  background: #eee0c9;
   z-index: 2;
 }
 .skill-container .skills {
   position: relative;
   width: 80%;
   z-index: 3;
-  color: #eee;
+  color: #f1f0e8;
 }
 .skill-container .skills h2 {
   width: 100%;
@@ -158,7 +158,7 @@
   width: calc(16.666% - 40px);
   height: 200px;
   background: linear-gradient(rgba(255, 255, 255, 0.1333333333), transparent);
-  border: 1px solid rgba(238, 238, 238, 0.1);
+  border: 1px solid rgba(241, 240, 232, 0.1);
   box-shadow: 0 25px 25px rgba(0, 0, 0, 0.25);
   -webkit-backdrop-filter: blur(10px);
           backdrop-filter: blur(10px);
@@ -176,11 +176,11 @@
   bottom: 0;
   width: 100%;
   height: 40px;
-  background: rgba(238, 238, 238, 0.05);
+  background: rgba(241, 240, 232, 0.05);
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #eee;
+  color: #f1f0e8;
 }
 .skill-container .skills .skill-list ul .glass:hover {
   transform: scale(1.1);
@@ -203,8 +203,8 @@
   left: 50%;
   transform: translate(-50%, 0);
   font-size: 1.5em;
-  color: #eee;
-  text-shadow: 0 0 5px #eee;
+  color: #f1f0e8;
+  text-shadow: 0 0 5px #f1f0e8;
   animation: bounce 2s infinite;
   transition: 0.5s;
   opacity: 1;
