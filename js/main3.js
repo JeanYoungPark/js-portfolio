@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { TransformControls } from "three/addons/controls/TransformControls.js";
 
 class App {
     constructor() {
@@ -9,9 +8,6 @@ class App {
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(main.offsetWidth, main.offsetHeight);
         main.appendChild(renderer.domElement);
-
-        // renderer.setSize(window.innerWidth, window.innerHeight);
-        // document.body.appendChild(renderer.domElement);
 
         this._renderer = renderer;
 
@@ -22,16 +18,15 @@ class App {
         window.addEventListener("keydown", this.onKeyDown.bind(this));
         window.addEventListener("keyup", this.onKeyUp.bind(this));
 
+        this._mouse;
         this._camera;
         this._currentAction;
         this._mixerMap = {};
         this._animationsMap = {};
         this._previousTime = 0;
-        this._performanceTime = performance.now();
         this._keys = [];
-        this._islandBoundingBox = new THREE.Box3();
-
-        this.control = { ArrowUp: "Walking", ArrowLeft: "Walking", ArrowRight: "Walking", Space: "Jumping" };
+        this._setDown = false;
+        // this._islandBoundingBox = new THREE.Box3();
     }
 
     async _setupScene() {
@@ -45,8 +40,9 @@ class App {
 
             this._setupDirectionalLight();
             this._setupAmbientLight();
-            this._setupCamera([this._mouse.position.x + 30, this._mouse.position.y + 8, this._mouse.position.z + 12]);
+            this._setupCamera();
             this._setupControls();
+            this._setupAnimations();
 
             requestAnimationFrame(this.render.bind(this));
 
@@ -90,33 +86,7 @@ class App {
                     model.castShadow = true;
 
                     this._scene.add(model);
-
-                    this._setupAnimations(gltf);
-                    resolve(model);
-
-                    // this._playAnimation(gltf);
-
-                    // if (isCenter) {
-                    //     this._gltf = gltf;
-                    // } else {
-                    //     const boundingBox = new THREE.Box3().setFromObject(model);
-
-                    //     const scaleFactor = 0.3;
-
-                    //     const size = new THREE.Vector3();
-                    //     boundingBox.getSize(size);
-                    //     size.multiplyScalar(scaleFactor);
-
-                    //     const center = boundingBox.getCenter(new THREE.Vector3());
-                    //     boundingBox.setFromCenterAndSize(center, size);
-
-                    //     this._islandBoundingBox = boundingBox;
-                    // }
-
-                    // if (animationName) {
-                    //     this._setupAnimations(gltf);
-                    //     this._playAnimation(gltf, animationName);
-                    // }
+                    resolve(gltf);
                 },
                 undefined,
                 (error) => {
@@ -126,12 +96,12 @@ class App {
         });
     }
 
-    _setupAnimations(gltf) {
-        const model = gltf.scene;
+    _setupAnimations() {
+        const model = this._mouse.scene;
         // 애니메이션 시스템에서 애니메이션을 제어하는 객체
         // 애니메이션 클립을 모델에 적용하고, 애니메이션의 시간 진행을 관리
         const mixer = new THREE.AnimationMixer(model);
-        const gltfAnimations = gltf.animations;
+        const gltfAnimations = this._mouse.animations;
 
         if (gltfAnimations.length > 0) {
             this._animationsMap[model.uuid] = {};
@@ -142,36 +112,26 @@ class App {
                 action.setLoop(THREE.LoopRepeat, Infinity);
 
                 this._animationsMap[model.uuid][name] = action;
-
-                //         if (name === "Jumping") {
-                //             animationAction.setLoop(THREE.LoopOnce);
-                //         } else {
-                //             animationAction.setLoop(THREE.LoopRepeat, Infinity);
-                //         }
-
-                //         this._animationsMap[model.uuid][name] = animationAction;
             });
 
             this._mixerMap[model.uuid] = mixer;
-            this._playAnimation(gltf);
         }
     }
 
-    _playAnimation(gltf, animationName = "Idle") {
-        const model = gltf.scene;
+    _playAnimation(animationName = "Idle") {
+        const model = this._mouse.scene;
         const animationMap = this._animationsMap[model.uuid];
 
-        if (animationName) {
+        if (animationMap) {
             const newAction = animationMap[animationName];
-
             if (newAction) {
-                // 현재 실행 중인 애니메이션을 멈추고 새로운 애니메이션을 재생
-                if (this._currentAction && this._currentAction !== animationMap[animationName]) {
-                    this._currentAction.fadeOut(0.2);
-                }
-
-                if (!newAction.isRunning()) {
-                    newAction.reset().fadeIn(0.2).play();
+                if (this._currentAction) {
+                    if (this._currentAction !== newAction) {
+                        this._currentAction.fadeOut(0.2);
+                        newAction.reset().fadeIn(0.2).play();
+                    }
+                } else {
+                    newAction.play();
                 }
 
                 this._currentAction = newAction;
@@ -180,114 +140,125 @@ class App {
     }
 
     _setupCamera(position = [0, 0, 0]) {
-        console.log(position);
-        console.log(this._mouse.position);
+        const forward = new THREE.Vector3(0, 0, -1);
+        this._mouse.scene.getWorldDirection(forward);
+
         const camera = new THREE.PerspectiveCamera(750, window.innerWidth / window.innerHeight, 0.1, 2000);
 
-        camera.position.set(...position);
-        camera.lookAt(this._mouse.position);
+        const offset = forward.clone().multiplyScalar(30).add(new THREE.Vector3(0, 10, 0));
+        // const offset = new THREE.Vector3(0, 0, -5);
+        const characterPosition = new THREE.Vector3(this._mouse.scene.position.x, this._mouse.scene.position.y, this._mouse.scene.position.z); // 캐릭터 위치 복사
+
+        camera.position.copy(characterPosition.clone().add(offset)); // 카메라 위치 업데이트
+        camera.lookAt(characterPosition); // 카메라가 항상 캐릭터를 바라보도록 설정
+
         this._camera = camera;
     }
 
     _setupControls() {
-        const orbitControls = new OrbitControls(this._camera, this._renderer.domElement);
-        // orbitControls.target.copy(model.position);
+        new OrbitControls(this._camera, this._renderer.domElement);
     }
 
     animationUpdate(time) {
-        // if (this._keys["ArrowUp"]) {
-        //     // 16은 기본적으로 60FPS를 기준으로 하는 프레임 시간을 나타냄
-        //     this._mouse.position.z -= (speed * Math.cos(this._mouse.rotation.y) * deltaTime) / 16;
-        //     this._mouse.position.x += (speed * Math.sin(this._mouse.rotation.y) * deltaTime) / 16;
-        // }
-
-        time *= 0.001; //
+        time *= 0.001;
 
         Object.values(this._mixerMap).forEach((mixer) => {
-            const deltaTime = time - this._previousTime;
-            mixer.update(deltaTime);
-            // this.handleMovement(time);
+            const deltaTime = time - this._previousTime; // 현재 프레임과 이전 프레임 사이의 시간 간격을 계산, 프레임 간 시간 차이
+            mixer.update(deltaTime); // 애니메이션 진행 속도 조절
         });
 
+        this.handleMovement(time);
         this._previousTime = time;
     }
 
-    // handleMovement(time) {
-    //     const model = this._gltf?.scene;
+    handleMovement(time) {
+        const model = this._mouse.scene;
 
-    //     if (model) {
-    //         const speed = 15; // 이동 속도
-    //         const deltaTime = time - this._previousTime;
+        if (model) {
+            const isRunning = this._keys["ShiftLeft"];
 
-    //         const forward = new THREE.Vector3(0, 0, -1); // 기본 Z축 방향
-    //         model.getWorldDirection(forward);
+            const speed = isRunning ? 9 : 5; // 이동 속도
+            const rotationSpeed = isRunning ? 7 : 5; // 회전 속도
+            const deltaTime = time - this._previousTime;
 
-    //         // 새로운 위치를 계산합니다
-    //         const newPosition = model.position.clone();
-    //         const newRotation = model.rotation.clone();
+            const forward = new THREE.Vector3(0, 0, -1);
+            model.getWorldDirection(forward); //forward벤터를 모델의 현재 방향으로 설정
 
-    //         if (this._keys["ArrowUp"]) {
-    //             newPosition.add(forward.multiplyScalar(speed * deltaTime));
-    //         } else if (this._keys["ArrowDown"]) {
-    //             newPosition.add(forward.multiplyScalar(-speed * deltaTime));
-    //         }
+            // 뒤로 가는 방향 벡터 계산
+            const backward = forward.clone().multiplyScalar(-1);
 
-    //         if (this._keys["ArrowLeft"]) {
-    //             newRotation.y += 1 * deltaTime;
-    //         } else if (this._keys["ArrowRight"]) {
-    //             newRotation.y -= 1 * deltaTime;
-    //         }
+            // 새로운 위치를 계산합니다
+            const newPosition = model.position.clone();
+            const newRotation = model.rotation.clone();
 
-    //         // const worldPosition = newPosition.clone().applyMatrix4(model.matrixWorld);
-    //         const modelBoundingBox = new THREE.Box3().setFromObject(model);
+            if (Object.values(this._keys).filter((value) => value === true).length === 0) {
+                this._playAnimation("Idle");
+            } else {
+                if (this._keys["ArrowUp"]) {
+                    this._playAnimation(isRunning ? "Running" : "Walking");
+                    newPosition.add(forward.multiplyScalar(speed * deltaTime));
+                } else if (this._keys["ArrowDown"]) {
+                    this._playAnimation("WalkingBackwards");
+                    newPosition.add(backward.multiplyScalar(speed * deltaTime));
+                } else if (this._keys["ControlLeft"]) {
+                    this._playAnimation("KneelDownPose");
+                }
 
-    //         const newModelBoundingBox = modelBoundingBox.clone();
-    //         newModelBoundingBox.setFromCenterAndSize(newPosition, new THREE.Vector3(1, 1, 1));
+                if (this._keys["ArrowLeft"]) {
+                    this._playAnimation(isRunning ? "Running" : "Walking");
+                    newRotation.y += 1.5 * deltaTime;
+                    newPosition.x += Math.sin(newRotation.y) * rotationSpeed * deltaTime;
+                    newPosition.z += Math.cos(newRotation.y) * rotationSpeed * deltaTime;
+                } else if (this._keys["ArrowRight"]) {
+                    this._playAnimation(isRunning ? "Running" : "Walking");
+                    newRotation.y -= 1.5 * deltaTime;
+                    newPosition.x += Math.sin(newRotation.y) * rotationSpeed * deltaTime;
+                    newPosition.z += Math.cos(newRotation.y) * rotationSpeed * deltaTime;
+                }
+            }
 
-    //         if (this._islandBoundingBox.intersectsBox(newModelBoundingBox)) {
-    //             // 경계 내에 있다면 위치와 회전을 업데이트합니다
-    //             model.position.copy(newPosition);
-    //             model.rotation.copy(newRotation);
-    //         }
-    //     }
-    // }
+            model.position.copy(newPosition);
+            model.rotation.copy(newRotation);
 
-    // updateCameraPosition() {
-    //     const model = this._gltf?.scene;
+            // if (this._keys["ArrowUp"]) {
+            //     newPosition.add(forward.multiplyScalar(speed * deltaTime));
+            // } else if (this._keys["ArrowDown"]) {
+            //     newPosition.add(forward.multiplyScalar(-speed * deltaTime));
+            // }
 
-    //     if (model) {
-    //         // 캐릭터의 방향 벡터를 가져옵니다 (앞쪽 방향).
-    //         // const forward = new THREE.Vector3(0, 0, -1); // 기본 Z축 방향
-    //         // model.getWorldDirection(forward); // 모델의 월드 방향 벡터를 업데이트
+            //         if (this._keys["ArrowLeft"]) {
+            //             newRotation.y += 1 * deltaTime;
+            //         } else if (this._keys["ArrowRight"]) {
+            //             newRotation.y -= 1 * deltaTime;
+            //         }
 
-    //         // 카메라와 캐릭터 사이의 거리와 오프셋을 설정합니다.
-    //         const distance = 1200; // 카메라와 캐릭터 사이의 거리
-    //         const offset = new THREE.Vector3(-1000, 300, distance); // Y축과 Z축 오프셋
+            //         // const worldPosition = newPosition.clone().applyMatrix4(model.matrixWorld);
+            //         const modelBoundingBox = new THREE.Box3().setFromObject(model);
 
-    //         // 카메라의 위치를 업데이트합니다.
-    //         this._camera.position.copy(model.position).add(offset.applyMatrix4(model.matrixWorld));
+            //         const newModelBoundingBox = modelBoundingBox.clone();
+            //         newModelBoundingBox.setFromCenterAndSize(newPosition, new THREE.Vector3(1, 1, 1));
 
-    //         //         // 카메라가 캐릭터를 바라보도록 설정합니다.
-    //         this._camera.lookAt(model.position);
-    //     }
-    // }
+            //         if (this._islandBoundingBox.intersectsBox(newModelBoundingBox)) {
+            //             // 경계 내에 있다면 위치와 회전을 업데이트합니다
+            //             model.position.copy(newPosition);
+            //             model.rotation.copy(newRotation);
+            //         }
+        }
+    }
 
     render(time) {
         this.animationUpdate(time);
-        // if (Object.values(this._keys).filter(() => true).length > 0) {
-        //     const newPosition = [this._mouse.position.x, this._mouse.position.y, this._camera.position.z];
-        //     this._setupCamera(newPosition);
-        // }
-
-        // this.updateCameraPosition();
+        if (Object.values(this._keys).filter(() => true).length > 0) {
+            //     const newPosition = [this._mouse.position.x, this._mouse.position.y, this._camera.position.z];
+            //     // this._setupCamera(newPosition);
+            this._setupCamera();
+        }
 
         this._renderer.render(this._scene, this._camera);
         requestAnimationFrame(this.render.bind(this));
     }
 
     resize() {
-        // const width = window.innerWidth;
-        // const height = window.innerHeight;
         const width = this._main.offsetWidth;
         const height = this._main.offsetHeight;
 
@@ -302,15 +273,7 @@ class App {
     }
 
     onKeyUp(event) {
-        //     if (this._gltf) {
         this._keys[event.code] = false;
-
-        //         const keydownList = Object.keys(this._keys).filter((key) => this._keys[key]);
-
-        //         if (keydownList.length === 0) {
-        //             this._playAnimation(this._gltf, "Idle");
-        //         }
-        //     }
     }
 }
 
