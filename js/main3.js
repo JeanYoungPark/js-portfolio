@@ -4,8 +4,8 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 class App {
     constructor() {
-        this._main = document.querySelector("#main");
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        this._main = document.querySelector("#main");
         renderer.setSize(main.offsetWidth, main.offsetHeight);
         main.appendChild(renderer.domElement);
 
@@ -24,9 +24,15 @@ class App {
         this._mixerMap = {};
         this._animationsMap = {};
         this._previousTime = 0;
-        this._keys = [];
-        this._setDown = false;
-        // this._islandBoundingBox = new THREE.Box3();
+        this._keys = {
+            ArrowUp: { value: false, code: 38 },
+            ArrowDown: { value: false, code: 40 },
+            ArrowLeft: { value: false, code: 37 },
+            ArrowRight: { value: false, code: 39 },
+            ShiftLeft: { value: false, code: 16 },
+            ControlLeft: { value: false, code: 17 },
+        };
+        this._boundary = {};
     }
 
     async _setupScene() {
@@ -41,8 +47,10 @@ class App {
             this._setupDirectionalLight();
             this._setupAmbientLight();
             this._setupCamera();
-            this._setupControls();
+            // this._setupControls();
             this._setupAnimations();
+
+            this._initializeBoundingBox();
 
             requestAnimationFrame(this.render.bind(this));
 
@@ -139,25 +147,35 @@ class App {
         }
     }
 
-    _setupCamera(position = [0, 0, 0]) {
+    _setupCamera() {
+        this._camera = new THREE.PerspectiveCamera(750, window.innerWidth / window.innerHeight, 0.1, 2000);
+        this._updateCameraPosition();
+    }
+
+    _updateCameraPosition() {
+        const model = this._mouse.scene;
         const forward = new THREE.Vector3(0, 0, -1);
-        this._mouse.scene.getWorldDirection(forward);
+        model.getWorldDirection(forward);
 
-        const camera = new THREE.PerspectiveCamera(750, window.innerWidth / window.innerHeight, 0.1, 2000);
+        const right = new THREE.Vector3(1, 0, 0);
+        right.applyQuaternion(model.quaternion); // 모델의 회전 방향을 고려하여 오른쪽 벡터 계산
 
-        const offset = forward.clone().multiplyScalar(30).add(new THREE.Vector3(0, 10, 0));
-        // const offset = new THREE.Vector3(0, 0, -5);
-        const characterPosition = new THREE.Vector3(this._mouse.scene.position.x, this._mouse.scene.position.y, this._mouse.scene.position.z); // 캐릭터 위치 복사
+        const offset = forward
+            .clone()
+            .multiplyScalar(25) // 캐릭터 앞쪽으로부터 떨어진 위치
+            .add(right.clone().multiplyScalar(10)) // 오른쪽으로 이동
+            .add(new THREE.Vector3(0, 10, 0)); // 위쪽으로 이동
 
-        camera.position.copy(characterPosition.clone().add(offset)); // 카메라 위치 업데이트
-        camera.lookAt(characterPosition); // 카메라가 항상 캐릭터를 바라보도록 설정
+        const characterPosition = model.position; // 캐릭터 위치 복사
+        const cameraPosition = characterPosition.clone().add(offset);
 
-        this._camera = camera;
+        this._camera.position.copy(cameraPosition); // 카메라 위치 업데이트
+        this._camera.lookAt(characterPosition); // 카메라가 항상 캐릭터를 바라보도록 설정
     }
 
-    _setupControls() {
-        new OrbitControls(this._camera, this._renderer.domElement);
-    }
+    // _setupControls() {
+    //     new OrbitControls(this._camera, this._renderer.domElement);
+    // }
 
     animationUpdate(time) {
         time *= 0.001;
@@ -175,7 +193,7 @@ class App {
         const model = this._mouse.scene;
 
         if (model) {
-            const isRunning = this._keys["ShiftLeft"];
+            const isRunning = this._keys["ShiftLeft"].value;
 
             const speed = isRunning ? 9 : 5; // 이동 속도
             const rotationSpeed = isRunning ? 7 : 5; // 회전 속도
@@ -191,69 +209,138 @@ class App {
             const newPosition = model.position.clone();
             const newRotation = model.rotation.clone();
 
-            if (Object.values(this._keys).filter((value) => value === true).length === 0) {
+            // bg 레이 계산
+            const charHeight = this._checkObject(newPosition);
+            charHeight && (newPosition.y = this._checkObject(newPosition));
+
+            if (Object.values(this._keys).filter((data) => data.value === true).length === 0) {
                 this._playAnimation("Idle");
             } else {
-                if (this._keys["ArrowUp"]) {
-                    this._playAnimation(isRunning ? "Running" : "Walking");
-                    newPosition.add(forward.multiplyScalar(speed * deltaTime));
-                } else if (this._keys["ArrowDown"]) {
-                    this._playAnimation("WalkingBackwards");
-                    newPosition.add(backward.multiplyScalar(speed * deltaTime));
-                } else if (this._keys["ControlLeft"]) {
-                    this._playAnimation("KneelDownPose");
-                }
+                if (this._keys["ControlLeft"].value) {
+                    this._playAnimation("KneelDownPose"); // 무조건 앉음
+                } else {
+                    const sum = Object.values(this._keys).reduce((prev, data) => {
+                        if (data.value === true) {
+                            return prev + data.code;
+                        }
+                        return prev;
+                    }, 0);
 
-                if (this._keys["ArrowLeft"]) {
-                    this._playAnimation(isRunning ? "Running" : "Walking");
-                    newRotation.y += 1.5 * deltaTime;
-                    newPosition.x += Math.sin(newRotation.y) * rotationSpeed * deltaTime;
-                    newPosition.z += Math.cos(newRotation.y) * rotationSpeed * deltaTime;
-                } else if (this._keys["ArrowRight"]) {
-                    this._playAnimation(isRunning ? "Running" : "Walking");
-                    newRotation.y -= 1.5 * deltaTime;
-                    newPosition.x += Math.sin(newRotation.y) * rotationSpeed * deltaTime;
-                    newPosition.z += Math.cos(newRotation.y) * rotationSpeed * deltaTime;
+                    switch (sum) {
+                        case 38: // ↑
+                        case 54:
+                            this._playAnimation(isRunning ? "Running" : "Walking");
+                            newPosition.add(forward.multiplyScalar(speed * deltaTime));
+                            break;
+                        case 40: // ↓
+                            this._playAnimation("WalkingBackwards");
+                            newPosition.add(backward.multiplyScalar(speed * deltaTime));
+                            break;
+                            this._playAnimation("KneelDownPose");
+                        case 37: // ←
+                            this._playAnimation(isRunning ? "Running" : "Walking");
+
+                            newRotation.y += 1.5 * deltaTime;
+                            newPosition.x += Math.sin(newRotation.y) * rotationSpeed * deltaTime;
+                            newPosition.z += Math.cos(newRotation.y) * rotationSpeed * deltaTime;
+                            break;
+                        case 39: // →
+                            this._playAnimation(isRunning ? "Running" : "Walking");
+
+                            newRotation.y -= 1.5 * deltaTime;
+                            newPosition.x += Math.sin(newRotation.y) * rotationSpeed * deltaTime;
+                            newPosition.z += Math.cos(newRotation.y) * rotationSpeed * deltaTime;
+                            break;
+                        case 75: // ↑ ←
+                            this._playAnimation(isRunning ? "Running" : "Walking");
+
+                            newPosition.add(forward.multiplyScalar(speed * deltaTime));
+                            newRotation.y += 1.5 * deltaTime;
+                            newPosition.x += Math.sin(newRotation.y) * rotationSpeed * deltaTime;
+                            newPosition.z += Math.cos(newRotation.y) * rotationSpeed * deltaTime;
+                            break;
+                        case 77: // ↑ →
+                            this._playAnimation(isRunning ? "Running" : "Walking");
+
+                            newPosition.add(forward.multiplyScalar(speed * deltaTime));
+                            newRotation.y -= 1.5 * deltaTime;
+                            newPosition.x += Math.sin(newRotation.y) * rotationSpeed * deltaTime;
+                            newPosition.z += Math.cos(newRotation.y) * rotationSpeed * deltaTime;
+                            break;
+                        default:
+                            this._playAnimation("Idle");
+                            break;
+                    }
                 }
             }
 
             model.position.copy(newPosition);
             model.rotation.copy(newRotation);
-
-            // if (this._keys["ArrowUp"]) {
-            //     newPosition.add(forward.multiplyScalar(speed * deltaTime));
-            // } else if (this._keys["ArrowDown"]) {
-            //     newPosition.add(forward.multiplyScalar(-speed * deltaTime));
-            // }
-
-            //         if (this._keys["ArrowLeft"]) {
-            //             newRotation.y += 1 * deltaTime;
-            //         } else if (this._keys["ArrowRight"]) {
-            //             newRotation.y -= 1 * deltaTime;
-            //         }
-
-            //         // const worldPosition = newPosition.clone().applyMatrix4(model.matrixWorld);
-            //         const modelBoundingBox = new THREE.Box3().setFromObject(model);
-
-            //         const newModelBoundingBox = modelBoundingBox.clone();
-            //         newModelBoundingBox.setFromCenterAndSize(newPosition, new THREE.Vector3(1, 1, 1));
-
-            //         if (this._islandBoundingBox.intersectsBox(newModelBoundingBox)) {
-            //             // 경계 내에 있다면 위치와 회전을 업데이트합니다
-            //             model.position.copy(newPosition);
-            //             model.rotation.copy(newRotation);
-            //         }
         }
+    }
+
+    _initializeBoundingBox() {
+        if (this._background.scene) {
+            const boundingBox = new THREE.Box3().setFromObject(this._background.scene);
+
+            // 바운더리의 최소값과 최대값 가져오기
+            const boundingBoxMin = boundingBox.min;
+            const boundingBoxMax = boundingBox.max;
+
+            // 바운더리 설정
+            this._boundary = {
+                x: { min: boundingBoxMin.x, max: boundingBoxMax.x },
+                y: { min: boundingBoxMin.y, max: boundingBoxMax.y },
+                z: { min: boundingBoxMin.z, max: boundingBoxMax.z },
+            };
+        }
+    }
+
+    _constrainPosition(position) {
+        position.x = Math.max(this._boundary.x.min, Math.min(this._boundary.x.max, position.x));
+        position.y = Math.max(this._boundary.y.min, Math.min(this._boundary.y.max, position.y));
+        position.z = Math.max(this._boundary.z.min, Math.min(this._boundary.z.max, position.z));
+    }
+
+    _checkObject(newPosition) {
+        // 래아캐스터를 사용하여 캐릭터의 높이 조정
+        const raycaster = new THREE.Raycaster();
+        const rayOrigin = newPosition.clone();
+        rayOrigin.y = this._mouse.scene.position.y;
+        raycaster.ray.origin.copy(rayOrigin);
+        raycaster.ray.direction.set(0, -1, 0); // 아래 방향으로 레이 발사
+
+        const meshes = [];
+        this._background.scene.traverse((child) => {
+            if (child instanceof THREE.Mesh) {
+                meshes.push(child);
+            }
+        });
+
+        if (meshes.length > 0) {
+            const intersects = raycaster.intersectObjects(meshes, true); // true는 자식 객체들도 검사
+
+            if (intersects.length > 0) {
+                const intersection = intersects[0];
+                const object = intersection.object;
+
+                const groundHeight = intersection.point.y; // 바닥의 높이
+                // 캐릭터의 y 위치를 바닥의 높이에 맞추어 조정
+                if (object.material.name === "Ground" || object.material.name === "Rocks") return 3.5 + groundHeight;
+            }
+        }
+
+        return false;
     }
 
     render(time) {
         this.animationUpdate(time);
-        if (Object.values(this._keys).filter(() => true).length > 0) {
-            //     const newPosition = [this._mouse.position.x, this._mouse.position.y, this._camera.position.z];
-            //     // this._setupCamera(newPosition);
-            this._setupCamera();
+
+        if (Object.values(this._keys).filter((data) => data.value === true).length > 0) {
+            this._updateCameraPosition();
         }
 
+        this._constrainPosition(this._mouse.scene.position);
         this._renderer.render(this._scene, this._camera);
         requestAnimationFrame(this.render.bind(this));
     }
@@ -269,11 +356,16 @@ class App {
     }
 
     onKeyDown(event) {
-        this._keys[event.code] = true;
+        console.log(event.keyCode);
+        if (this._keys[event.code] !== undefined) {
+            this._keys[event.code].value = true;
+        }
     }
 
     onKeyUp(event) {
-        this._keys[event.code] = false;
+        if (this._keys[event.code] !== undefined) {
+            this._keys[event.code].value = false;
+        }
     }
 }
 
