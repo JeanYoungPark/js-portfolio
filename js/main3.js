@@ -31,6 +31,7 @@ class App {
             ArrowRight: { value: false, code: 39 },
             ShiftLeft: { value: false, code: 16 },
             ControlLeft: { value: false, code: 17 },
+            AltLeft: { value: false, code: 18 },
         };
         this._boundary = {};
     }
@@ -218,6 +219,8 @@ class App {
             } else {
                 if (this._keys["ControlLeft"].value) {
                     this._playAnimation("KneelDownPose"); // 무조건 앉음
+                } else if (this._keys["AltLeft"].value) {
+                    this._playAnimation("Dancing"); // 무조건 춤춤
                 } else {
                     const sum = Object.values(this._keys).reduce((prev, data) => {
                         if (data.value === true) {
@@ -227,7 +230,7 @@ class App {
                     }, 0);
 
                     switch (sum) {
-                        case 38: // ↑
+                        case 38: // ↑ or ↑ + shift
                         case 54:
                             this._playAnimation(isRunning ? "Running" : "Walking");
                             newPosition.add(forward.multiplyScalar(speed * deltaTime));
@@ -236,22 +239,24 @@ class App {
                             this._playAnimation("WalkingBackwards");
                             newPosition.add(backward.multiplyScalar(speed * deltaTime));
                             break;
-                            this._playAnimation("KneelDownPose");
-                        case 37: // ←
+                        case 37: // ← or ← + shift
+                        case 53:
                             this._playAnimation(isRunning ? "Running" : "Walking");
 
                             newRotation.y += 1.5 * deltaTime;
                             newPosition.x += Math.sin(newRotation.y) * rotationSpeed * deltaTime;
                             newPosition.z += Math.cos(newRotation.y) * rotationSpeed * deltaTime;
                             break;
-                        case 39: // →
+                        case 39: // → or → + shift
+                        case 55:
                             this._playAnimation(isRunning ? "Running" : "Walking");
 
                             newRotation.y -= 1.5 * deltaTime;
                             newPosition.x += Math.sin(newRotation.y) * rotationSpeed * deltaTime;
                             newPosition.z += Math.cos(newRotation.y) * rotationSpeed * deltaTime;
                             break;
-                        case 75: // ↑ ←
+                        case 75: // ↑ ← or ↑ ← + shift
+                        case 91:
                             this._playAnimation(isRunning ? "Running" : "Walking");
 
                             newPosition.add(forward.multiplyScalar(speed * deltaTime));
@@ -259,7 +264,8 @@ class App {
                             newPosition.x += Math.sin(newRotation.y) * rotationSpeed * deltaTime;
                             newPosition.z += Math.cos(newRotation.y) * rotationSpeed * deltaTime;
                             break;
-                        case 77: // ↑ →
+                        case 77: // ↑ → or ↑ → + shift
+                        case 93:
                             this._playAnimation(isRunning ? "Running" : "Walking");
 
                             newPosition.add(forward.multiplyScalar(speed * deltaTime));
@@ -281,26 +287,97 @@ class App {
 
     _initializeBoundingBox() {
         if (this._background.scene) {
-            const boundingBox = new THREE.Box3().setFromObject(this._background.scene);
+            // const boundingBox = new THREE.Box3().setFromObject(this._background.scene);
+            // const center = new THREE.Vector3();
+            // boundingBox.getCenter(center);
+            // this._center = center;
+            // // 경계 상자의 크기 계산
+            // const size = new THREE.Vector3();
+            // boundingBox.getSize(size);
 
-            // 바운더리의 최소값과 최대값 가져오기
-            const boundingBoxMin = boundingBox.min;
-            const boundingBoxMax = boundingBox.max;
+            // // 반지름은 대각선 길이의 절반
+            // const ratio = 0.5;
+            // const radius = (Math.sqrt(size.x * size.x + size.y * size.y + size.z * size.z) / 2) * ratio;
+            // this._radius = radius;
 
-            // 바운더리 설정
+            let groundMesh = null;
+
+            this._background.scene.traverse((child) => {
+                console.log(child);
+                if (child.isMesh && child.material.name === "ground") {
+                    groundMesh = child;
+                }
+            });
+            // console.log(groundMesh);
+            // const boundingBox = new THREE.Box3().setFromObject(this._background.scene);
+            const boundingBox = new THREE.Box3().setFromObject(groundMesh);
+
+            // 경계 상자의 중심과 크기를 구합니다.
+            const center = new THREE.Vector3();
+            boundingBox.getCenter(center);
+            this._center = center;
+
+            const size = new THREE.Vector3();
+            boundingBox.getSize(size);
+
+            // 원래 바운더리 크기를 저장합니다.
+            this._originalBoundary = {
+                x: { min: boundingBox.min.x, max: boundingBox.max.x },
+                y: { min: boundingBox.min.y, max: boundingBox.max.y },
+                z: { min: boundingBox.min.z, max: boundingBox.max.z },
+            };
+
+            // 바운더리 크기를 줄이기 위한 스케일 비율을 설정합니다.
+            this._scaleFactor = 0.6; // 원하는 스케일 비율 (0.8은 80% 크기)
+            this._updateBoundaryWithScale();
+        }
+    }
+
+    _updateBoundaryWithScale() {
+        if (this._originalBoundary) {
+            const scaleFactor = this._scaleFactor;
+
             this._boundary = {
-                x: { min: boundingBoxMin.x, max: boundingBoxMax.x },
-                y: { min: boundingBoxMin.y, max: boundingBoxMax.y },
-                z: { min: boundingBoxMin.z, max: boundingBoxMax.z },
+                x: {
+                    min: this._center.x + (this._originalBoundary.x.min - this._center.x) * scaleFactor,
+                    max: this._center.x + (this._originalBoundary.x.max - this._center.x) * scaleFactor,
+                },
+                y: {
+                    min: this._center.y + (this._originalBoundary.y.min - this._center.y) * scaleFactor,
+                    max: this._center.y + (this._originalBoundary.y.max - this._center.y) * scaleFactor,
+                },
+                z: {
+                    min: this._center.z + (this._originalBoundary.z.min - this._center.z) * scaleFactor,
+                    max: this._center.z + (this._originalBoundary.z.max - this._center.z) * scaleFactor,
+                },
             };
         }
     }
 
     _constrainPosition(position) {
-        position.x = Math.max(this._boundary.x.min, Math.min(this._boundary.x.max, position.x));
-        position.y = Math.max(this._boundary.y.min, Math.min(this._boundary.y.max, position.y));
-        position.z = Math.max(this._boundary.z.min, Math.min(this._boundary.z.max, position.z));
+        if (this._boundary) {
+            position.x = Math.max(this._boundary.x.min, Math.min(this._boundary.x.max, position.x));
+            position.y = Math.max(this._boundary.y.min, Math.min(this._boundary.y.max, position.y));
+            position.z = Math.max(this._boundary.z.min, Math.min(this._boundary.z.max, position.z));
+        }
     }
+
+    // _constrainPosition(position) {
+    //     const dx = position.x - this._center.x;
+    //     const dz = position.z - this._center.y;
+    //     const distance = Math.sqrt(dx * dx + dz * dz);
+
+    //     if (distance > this._radius) {
+    //         // 거리 초과 시, 위치를 원형의 경계로 조정
+    //         const direction = new THREE.Vector2(dx, dz).normalize();
+    //         position.x = this._center.x + direction.x * this._radius;
+    //         position.z = this._center.y + direction.y * this._radius;
+    //     }
+
+    //     // position.x = Math.max(this._boundary.x.min, Math.min(this._boundary.x.max, position.x));
+    //     // position.y = Math.max(this._boundary.y.min, Math.min(this._boundary.y.max, position.y));
+    //     // position.z = Math.max(this._boundary.z.min, Math.min(this._boundary.z.max, position.z));
+    // }
 
     _checkObject(newPosition) {
         // 래아캐스터를 사용하여 캐릭터의 높이 조정
@@ -325,6 +402,7 @@ class App {
                 const object = intersection.object;
 
                 const groundHeight = intersection.point.y; // 바닥의 높이
+                console.log(object.material.name);
                 // 캐릭터의 y 위치를 바닥의 높이에 맞추어 조정
                 if (object.material.name === "Ground" || object.material.name === "Rocks") return 3.5 + groundHeight;
             }
@@ -356,7 +434,6 @@ class App {
     }
 
     onKeyDown(event) {
-        console.log(event.keyCode);
         if (this._keys[event.code] !== undefined) {
             this._keys[event.code].value = true;
         }
